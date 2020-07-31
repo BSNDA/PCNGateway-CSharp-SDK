@@ -7,7 +7,7 @@ using System.IO;
 
 namespace bsn_sdk_csharp
 {
-    public class Config
+    public class XuperchainConfig
     {
         /// <summary>
         /// Get App info via URL
@@ -81,89 +81,10 @@ namespace bsn_sdk_csharp
         }
 
         /// <summary>
-        ///initialize the configuration info
-        /// </summary>
-        /// <returns></returns>
-        public static AppSetting NewMockConfig()
-        {
-            var config = new AppSetting()
-            {
-                reqUrl = "http://192.168.1.43:17502",
-                appCert = new AppCert()
-                {
-                    AppPublicCert = @"-----BEGIN PUBLIC KEY-----
-MFkwEwYHKoZIzj0CAQYIKoEcz1UBgi0DQgAECwJ5ftuqndO9H3ks1hD8cB6IA9lx
-/b0Z2hnFZ77rgRm9Q4lY1aqIhkM63Lh6X7uwPsoRC1xkS0PMp5x/jnRWcw==
------END PUBLIC KEY-----",
-                    UserAppPrivate = @"-----BEGIN PRIVATE KEY-----
-MIGTAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBHkwdwIBAQQgboz7K3ByOve5tJvp
-s9bWjc03HSSSA02W3IokxSwyzrSgCgYIKoZIzj0DAQehRANCAAT7Mv6TvMcmNQkp
-ZFN3Fb5BcQoIasr8YsYdrjBWcna34t0uc/ddSKfjLzCGQL3T0Nw3DsG2o2jriI2L
-qOohgsN6
------END PRIVATE KEY-----
-"
-                },
-                appInfo = new AppInfo()
-                {
-                    AppCode = "app0001202007301714165892185",
-                },
-                userCode = "USER0001202007221349011109723",
-                mspDir = "D:/csharp/bsn-sdk-csharp/Certs",
-                httpsCert = "D:/csharp/bsn-sdk-csharp/Certs/bsn_gateway_https.crt"
-            };
-
-            if (!Directory.Exists(config.mspDir))
-            {
-                Directory.CreateDirectory(config.mspDir);
-            }
-            Init(config);
-            return config;
-        }
-
-        /// <summary>
         ///
         /// </summary>
         /// <returns></returns>
         public static AppSetting NewSM2MockConfig()
-        {
-            var config = new AppSetting()
-            {
-                reqUrl = "http://192.168.1.43:17502",
-                appCert = new AppCert()
-                {
-                    AppPublicCert = @"-----BEGIN PUBLIC KEY-----
-MFkwEwYHKoZIzj0CAQYIKoEcz1UBgi0DQgAECwJ5ftuqndO9H3ks1hD8cB6IA9lx
-/b0Z2hnFZ77rgRm9Q4lY1aqIhkM63Lh6X7uwPsoRC1xkS0PMp5x/jnRWcw==
------END PUBLIC KEY-----",
-                    UserAppPrivate = @"-----BEGIN PRIVATE KEY-----
-MIGHAgEAMBMGByqGSM49AgEGCCqBHM9VAYItBG0wawIBAQQg7EdUyjWP96YErQfI
-OgYWDf3VCfYJAoxjyN39yT8+7kmhRANCAAQWVUIhQMvLHQaQ7XTbQTCWvn0Cgnyq
-Y5vaSIbjy5Zzsa7Fei6kWiMBIqvJE0gGkx7Us9lQEi4dgbKMD5AdEqQb
------END PRIVATE KEY-----
-"
-                },
-                appInfo = new AppInfo()
-                {
-                    AppCode = "app0001202007301352479699561",
-                },
-                userCode = "USER0001202007221349011109723",
-                mspDir = "D:/csharp/bsn-sdk-csharp/Certs",
-                httpsCert = "D:/csharp/bsn-sdk-csharp/Certs/bsn_gateway_https.crt"
-            };
-
-            if (!Directory.Exists(config.mspDir))
-            {
-                Directory.CreateDirectory(config.mspDir);
-            }
-            Init(config);
-            return config;
-        }
-
-        /// <summary>
-        ///
-        /// </summary>
-        /// <returns></returns>
-        public static AppSetting NewSM2TrusteeshipMockConfig()
         {
             var config = new AppSetting()
             {
@@ -175,19 +96,18 @@ MFkwEwYHKoZIzj0CAQYIKoEcz1UBgi0DQgAECwJ5ftuqndO9H3ks1hD8cB6IA9lx
 /b0Z2hnFZ77rgRm9Q4lY1aqIhkM63Lh6X7uwPsoRC1xkS0PMp5x/jnRWcw==
 -----END PUBLIC KEY-----",
                     UserAppPrivate = @"-----BEGIN PRIVATE KEY-----
-MIGTAgEAMBMGByqGSM49AgEGCCqBHM9VAYItBHkwdwIBAQQg/7RMFXO8U9LyrTJW
-EZ3gtdUI5A5K+yPAEb3iiPe7bKegCgYIKoEcz1UBgi2hRANCAASvJdHvty4qiZ2r
-xcDYrMrgskyr6vthAy/Tgz/3S6SR/9ERuYVLh+Hzb6ptpIWHo0ek5j05ERh5vSzC
-PIXILYkE
+MIGTAgEAMBMGByqGSM49AgEGCCqBHM9VAYItBHkwdwIBAQQg1gO6YNUqCPw7YQ28
+qxkVEshMXJU7Hq0AXGDhJYxQxwGgCgYIKoEcz1UBgi2hRANCAARD9tF1S+8Y2fww
+d56Eu/26kBOOyv6ydvLzD/wNqUOG4PCs2INAXXOIxm2aIWwEL5fa1kqIlQ+brAkL
+XqsmEDTz
 -----END PRIVATE KEY-----
-
 "
                 },
                 appInfo = new AppInfo()
                 {
-                    AppCode = "app0001202007291443281737652",
+                    AppCode = "app0001202007301533448387181",
                 },
-                userCode = "USER0001202007161739119605411",
+                userCode = "USER0001202007301532165759414",
                 mspDir = "D:/csharp/bsn-sdk-csharp/Certs",
                 httpsCert = "D:/csharp/bsn-sdk-csharp/Certs/bsn_gateway_https.crt"
             };

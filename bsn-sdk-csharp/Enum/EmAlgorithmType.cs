@@ -18,9 +18,10 @@ namespace bsn_sdk_csharp.Enum
 
         public static readonly EmAlgorithmType SM2 = new EmAlgorithmType(1, "SM2");
         public static readonly EmAlgorithmType Ecdsa = new EmAlgorithmType(2, "ECDSA(secp256r1)");
+        public static readonly EmAlgorithmType Ecdsak1 = new EmAlgorithmType(3, "ECDSA(secp256k1)");
 
         public static IEnumerable<EmAlgorithmType> List() =>
-            new[] { SM2, Ecdsa };
+            new[] { SM2, Ecdsa, Ecdsak1 };
 
         public static EmAlgorithmType From(int value)
         {

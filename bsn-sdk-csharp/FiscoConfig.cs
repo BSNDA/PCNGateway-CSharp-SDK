@@ -1,13 +1,16 @@
-﻿using bsn_sdk_csharp.Enum;
+﻿using bsn_sdk_csharp.Common;
+using bsn_sdk_csharp.Ecdsa;
+using bsn_sdk_csharp.Enum;
 using bsn_sdk_csharp.Models;
 using bsn_sdk_csharp.NodeExtends;
 using Newtonsoft.Json;
+using Org.BouncyCastle.Crypto.Parameters;
 using System;
 using System.IO;
 
 namespace bsn_sdk_csharp
 {
-    public class Config
+    public class FiscoConfig
     {
         /// <summary>
         /// Get App info via URL
@@ -80,11 +83,53 @@ namespace bsn_sdk_csharp
             }
         }
 
+        public static ECKeyPair GetUserKey(string userName, AppSetting a)
+        {
+            try
+            {
+                var prikurl = a.mspDir + "/" + userName + "@" + a.appInfo.AppCode + "_prik";
+                var pubkurl = a.mspDir + "/" + userName + "@" + a.appInfo.AppCode + "_pubk";
+                ECKeyPair key = new ECKeyPair();
+
+                if (!File.Exists(prikurl))
+                {
+                    if (a.appInfo.AlgorithmType == EmAlgorithmType.SM2)
+                    {
+                        var sm2key = SM2.SM2Utils.GenerateKeyPair();
+
+                        ECDSAStore.SavePriKey((ECPrivateKeyParameters)sm2key.Private, prikurl);
+                        ECDSAStore.SavePubKey(sm2key.Public, pubkurl);
+                        key.prik = (ECPrivateKeyParameters)sm2key.Private;
+                        key.pubk = (ECPublicKeyParameters)sm2key.Public;
+                    }
+                    else
+                    {
+                        var k1key = Ecdsa.ECDSAUtils.GenerateSecP256k1KeyPair();
+                        ECDSAStore.SavePriKey(k1key.Private, prikurl);
+                        ECDSAStore.SavePubKey(k1key.Public, pubkurl);
+                        key.prik = (ECPrivateKeyParameters)k1key.Private;
+                        key.pubk = (ECPublicKeyParameters)k1key.Public;
+                    }
+                }
+                else
+                {
+                    key.prik = LibraryHelper.loadprikey(prikurl);
+                    key.pubk = LibraryHelper.loadpubkey(pubkurl);
+                }
+
+                return key;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         /// <summary>
-        ///initialize the configuration info
+        ///
         /// </summary>
         /// <returns></returns>
-        public static AppSetting NewMockConfig()
+        public static AppSetting NewMockTestFiscoSMConfig()
         {
             var config = new AppSetting()
             {
@@ -96,35 +141,36 @@ MFkwEwYHKoZIzj0CAQYIKoEcz1UBgi0DQgAECwJ5ftuqndO9H3ks1hD8cB6IA9lx
 /b0Z2hnFZ77rgRm9Q4lY1aqIhkM63Lh6X7uwPsoRC1xkS0PMp5x/jnRWcw==
 -----END PUBLIC KEY-----",
                     UserAppPrivate = @"-----BEGIN PRIVATE KEY-----
-MIGTAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBHkwdwIBAQQgboz7K3ByOve5tJvp
-s9bWjc03HSSSA02W3IokxSwyzrSgCgYIKoZIzj0DAQehRANCAAT7Mv6TvMcmNQkp
-ZFN3Fb5BcQoIasr8YsYdrjBWcna34t0uc/ddSKfjLzCGQL3T0Nw3DsG2o2jriI2L
-qOohgsN6
+MIGTAgEAMBMGByqGSM49AgEGCCqBHM9VAYItBHkwdwIBAQQg3ail5qa1WdSCaE4l
+NDtKsH43sn4oLU2Q4Ag9g1zmEuWgCgYIKoEcz1UBgi2hRANCAATnkyph+Ukd5mSX
+Dnr0d0JNH5lzMCYlFIf/8e3LOb8R1qvYEI/ePU6TVX7UcEbCAnVPlDMlv/oesYsn
+j8PiaBZv
 -----END PRIVATE KEY-----
 "
                 },
                 appInfo = new AppInfo()
                 {
-                    AppCode = "app0001202007301714165892185",
+                    AppCode = "app0001202006221045063821068",
                 },
-                userCode = "USER0001202007221349011109723",
+                userCode = "USER0001202005281426464614357",
                 mspDir = "D:/csharp/bsn-sdk-csharp/Certs",
-                httpsCert = "D:/csharp/bsn-sdk-csharp/Certs/bsn_gateway_https.crt"
+                httpsCert = "D:/csharp/bsn-sdk-csharp/Certs/bsn_gateway_https.crt",
+                isInit = true
             };
 
             if (!Directory.Exists(config.mspDir))
             {
                 Directory.CreateDirectory(config.mspDir);
             }
-            Init(config);
+            if (config.isInit)
+            {
+                Init(config);
+            }
+
             return config;
         }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <returns></returns>
-        public static AppSetting NewSM2MockConfig()
+        public static AppSetting NewMockTestFiscoK1Config()
         {
             var config = new AppSetting()
             {
@@ -132,64 +178,23 @@ qOohgsN6
                 appCert = new AppCert()
                 {
                     AppPublicCert = @"-----BEGIN PUBLIC KEY-----
-MFkwEwYHKoZIzj0CAQYIKoEcz1UBgi0DQgAECwJ5ftuqndO9H3ks1hD8cB6IA9lx
-/b0Z2hnFZ77rgRm9Q4lY1aqIhkM63Lh6X7uwPsoRC1xkS0PMp5x/jnRWcw==
+MFYwEAYHKoZIzj0CAQYFK4EEAAoDQgAEh4WlY4pCv814i3WY5aRhtR3PoiIXOM1I
+5xBGylyQTedo6DzJUdLfYZSZLs4py70D8FJtNICMVQCfezA7whHzUw==
 -----END PUBLIC KEY-----",
                     UserAppPrivate = @"-----BEGIN PRIVATE KEY-----
-MIGHAgEAMBMGByqGSM49AgEGCCqBHM9VAYItBG0wawIBAQQg7EdUyjWP96YErQfI
-OgYWDf3VCfYJAoxjyN39yT8+7kmhRANCAAQWVUIhQMvLHQaQ7XTbQTCWvn0Cgnyq
-Y5vaSIbjy5Zzsa7Fei6kWiMBIqvJE0gGkx7Us9lQEi4dgbKMD5AdEqQb
+MIGNAgEAMBAGByqGSM49AgEGBSuBBAAKBHYwdAIBAQQgs9DOx+bq2PlWVFRESHAM
+VBKjDU9co5TIUzY203/utIugBwYFK4EEAAqhRANCAAR2T4i+jP7Tw1kFcHwGttKT
+OMD7p1OHVE/evqTNlHRkYgDxEKBFE5Yoc/SsgStHhn9P9Isdz1xXYoiIzvPm9cFQ
 -----END PRIVATE KEY-----
 "
                 },
                 appInfo = new AppInfo()
                 {
-                    AppCode = "app0001202007301352479699561",
+                    AppCode = "app0001202006042323057101002",
                 },
-                userCode = "USER0001202007221349011109723",
+                userCode = "USER0001202006042321579692440",
                 mspDir = "D:/csharp/bsn-sdk-csharp/Certs",
-                httpsCert = "D:/csharp/bsn-sdk-csharp/Certs/bsn_gateway_https.crt"
-            };
-
-            if (!Directory.Exists(config.mspDir))
-            {
-                Directory.CreateDirectory(config.mspDir);
-            }
-            Init(config);
-            return config;
-        }
-
-        /// <summary>
-        ///
-        /// </summary>
-        /// <returns></returns>
-        public static AppSetting NewSM2TrusteeshipMockConfig()
-        {
-            var config = new AppSetting()
-            {
-                reqUrl = "http://192.168.1.41:17502",
-                appCert = new AppCert()
-                {
-                    AppPublicCert = @"-----BEGIN PUBLIC KEY-----
-MFkwEwYHKoZIzj0CAQYIKoEcz1UBgi0DQgAECwJ5ftuqndO9H3ks1hD8cB6IA9lx
-/b0Z2hnFZ77rgRm9Q4lY1aqIhkM63Lh6X7uwPsoRC1xkS0PMp5x/jnRWcw==
------END PUBLIC KEY-----",
-                    UserAppPrivate = @"-----BEGIN PRIVATE KEY-----
-MIGTAgEAMBMGByqGSM49AgEGCCqBHM9VAYItBHkwdwIBAQQg/7RMFXO8U9LyrTJW
-EZ3gtdUI5A5K+yPAEb3iiPe7bKegCgYIKoEcz1UBgi2hRANCAASvJdHvty4qiZ2r
-xcDYrMrgskyr6vthAy/Tgz/3S6SR/9ERuYVLh+Hzb6ptpIWHo0ek5j05ERh5vSzC
-PIXILYkE
------END PRIVATE KEY-----
-
-"
-                },
-                appInfo = new AppInfo()
-                {
-                    AppCode = "app0001202007291443281737652",
-                },
-                userCode = "USER0001202007161739119605411",
-                mspDir = "D:/csharp/bsn-sdk-csharp/Certs",
-                httpsCert = "D:/csharp/bsn-sdk-csharp/Certs/bsn_gateway_https.crt"
+                httpsCert = ""//D:/csharp/bsn-sdk-csharp/Certs/bsn_gateway_https.crt
             };
 
             if (!Directory.Exists(config.mspDir))

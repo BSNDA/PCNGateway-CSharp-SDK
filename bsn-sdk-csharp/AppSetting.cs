@@ -15,7 +15,7 @@ namespace bsn_sdk_csharp
         public string mspDir { get; set; }
 
         /// <summary>
-        /// request URL gateway 
+        /// request URL gateway
         /// </summary>
         public string reqUrl { get; set; }
 
@@ -34,6 +34,8 @@ namespace bsn_sdk_csharp
         /// </summary>
         public AppInfo appInfo { get; set; }
 
+        public bool isInit { get; set; }
+
         public AppSetting()
         {
             appInfo = new AppInfo();
@@ -49,7 +51,7 @@ namespace bsn_sdk_csharp
         //bsn DApp public cert
         public string AppPublicCert { get; set; }
 
-        //user private cert 
+        //user private cert
         public string UserAppPrivate { get; set; }
     }
 

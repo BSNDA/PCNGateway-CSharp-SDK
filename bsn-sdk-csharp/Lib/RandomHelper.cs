@@ -26,7 +26,7 @@ namespace bsn_sdk_csharp.Lib
             return GetRandomBytes(NonceSize);
         }
 
-        private static byte[] GetRandomBytes(int len)
+        public static byte[] GetRandomBytes(int len)
         {
             var key = GetRandomizer(len, true, true, true, true);
             return System.Text.Encoding.UTF8.GetBytes(key);
@@ -56,12 +56,12 @@ namespace bsn_sdk_csharp.Lib
                 //generate a random number A, representing a type
                 //1=number，2=symbol，3=small letter，4=capital letter
 
-                intA = ranA.Next(1, 5); 
+                intA = ranA.Next(1, 5);
 
-                //If the random number A=1, run to generate the number 
+                //If the random number A=1, run to generate the number
                 //Generate a random number A, from 0 to 10
                 //Turn the ramdon number A to a character (string)
-                //after generating, bit+1, string accumulation, end loop 
+                //after generating, bit+1, string accumulation, end loop
 
                 if (intA == 1 && booNumber)
                 {
@@ -72,7 +72,7 @@ namespace bsn_sdk_csharp.Lib
                 }
 
                 //If the random number A=2, run the generated symbol
-                //Generate a random number A, representing the range 
+                //Generate a random number A, representing the range
                 //1：33-47 range，2：58-64 range，3：91-96 range，4：123-126 range
 
                 if (intA == 2 && booSign == true)
@@ -80,7 +80,7 @@ namespace bsn_sdk_csharp.Lib
                     intA = ranA.Next(1, 5);
 
                     //If A=1
-                    //Generate a random number A, representing Ascii code, 33-47 
+                    //Generate a random number A, representing Ascii code, 33-47
                     //Turn the random number into a charater string
                     //after generating, bit+1, string accumulation, end loop
 
@@ -93,8 +93,8 @@ namespace bsn_sdk_csharp.Lib
                     }
 
                     //If A=2
-                    //Generate a random number A，Ascii code 58-64 
-                    //Turn the random number A into a charater string 
+                    //Generate a random number A，Ascii code 58-64
+                    //Turn the random number A into a charater string
                     //After generating, bit+1, string accumulation, end loop
 
                     if (intA == 2)
@@ -106,8 +106,8 @@ namespace bsn_sdk_csharp.Lib
                     }
 
                     //If A=3
-                    //Generate a random number A, Ascii code 91-96 
-                    //Turn the random number A into a charater string 
+                    //Generate a random number A, Ascii code 91-96
+                    //Turn the random number A into a charater string
                     //After generating, bit+1, string accumulation, end loop
 
                     if (intA == 3)
@@ -120,7 +120,7 @@ namespace bsn_sdk_csharp.Lib
 
                     //If A=4
                     //Generate a random number A, Ascii code 123-126
-                    //Turn the random number A into a charater string 
+                    //Turn the random number A into a charater string
                     //After generating, bit+1, string accumulation, end loop
 
                     if (intA == 4)
@@ -133,7 +133,7 @@ namespace bsn_sdk_csharp.Lib
                 }
 
                 //If the random number A=3, run to generate lowercase letters
-                //Gemerate a random number, 97-122 
+                //Gemerate a random number, 97-122
                 //Turn the random number A into a character string
                 //after generating, bit+1, string accumulation, end loop
 
@@ -146,8 +146,8 @@ namespace bsn_sdk_csharp.Lib
                 }
 
                 //If the random number A=4, run to generate uppercase letters
-                //generate a random number, ranging from 65 to 90 
-                //Turn random number A into a character string 
+                //generate a random number, ranging from 65 to 90
+                //Turn random number A into a character string
                 //after generating, bit+1, string accumulation, end loop
 
                 if (intA == 4 && booBigword == true)

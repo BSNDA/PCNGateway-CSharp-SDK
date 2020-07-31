@@ -1,5 +1,6 @@
 ﻿using bsn_sdk_csharp.Csr;
 using bsn_sdk_csharp.Ecdsa;
+using bsn_sdk_csharp.Enum;
 using bsn_sdk_csharp.Models;
 using bsn_sdk_csharp.Trans;
 using Newtonsoft.Json;
@@ -10,14 +11,14 @@ using System.IO;
 namespace bsn_sdk_csharp.NodeExtends
 {
     /// <summary>
-    /// Node Gateway Operations 
+    /// Node Gateway Operations
     /// </summary>
-    public class NodeServer
+    public class NodeServer : Client
     {
-        /// <summary>
-        /// Get App info via URL
-        /// </summary>
-        private static string appInfoUrl = "/api/app/getAppInfo";
+        public NodeServer(AppSetting _config) : base(_config)
+        {
+            config = _config;
+        }
 
         /// <summary>
         /// User registration URL
@@ -70,50 +71,13 @@ namespace bsn_sdk_csharp.NodeExtends
         private static string TransUrl = "/api/fabric/v1/node/trans";
 
         /// <summary>
-        /// Get DApp info 
+        /// user registration
         /// </summary>
         /// <param name="req">request content</param>
         /// <param name="url">interface address</param>
         /// <param name="certPath">https cert path</param>
         /// <returns></returns>
-        public static Tuple<bool, string, AppInfoResBody> GetAppInfo(AppSetting config)
-        {
-            try
-            {
-                //Get the unsigned signature of DApp 
-                NodeApiReq req = new NodeApiReq()
-                {
-                    header = new ReqHeader()
-                    {
-                        userCode = config.userCode,
-                        appCode = config.appInfo.AppCode
-                    }
-                };
-                NodeApiResBody<AppInfoResBody> res = SendHelper.SendPost<NodeApiResBody<AppInfoResBody>>(config.reqUrl + appInfoUrl, JsonConvert.SerializeObject(req), config.httpsCert);
-
-                if (res != null)
-                {
-                    //Check the status codes in turn 
-                    if (res.header.code != 0) return new Tuple<bool, string, AppInfoResBody>(false, res.header.msg, null);
-
-                    return new Tuple<bool, string, AppInfoResBody>(true, null, res.body);
-                }
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            return new Tuple<bool, string, AppInfoResBody>(false, "failed to get DApp info", null);
-        }
-
-        /// <summary>
-        /// user registration 
-        /// </summary>
-        /// <param name="req">request content</param>
-        /// <param name="url">interface address</param>
-        /// <param name="certPath">https cert path</param>
-        /// <returns></returns>
-        public static Tuple<bool, string, RegisterUserResBody> RegisterUser(AppSetting config, RegisterUserReqBody reqBody)
+        public Tuple<bool, string, RegisterUserResBody> RegisterUser(RegisterUserReqBody reqBody)
         {
             try
             {
@@ -121,8 +85,8 @@ namespace bsn_sdk_csharp.NodeExtends
                 {
                     body = new RegisterUserReqBody()
                     {
-                        name = reqBody.name,//one user can only be registered once, the second call returns a failed registration 
-                        secret = reqBody.secret//If the password is empty, a random password will be returned. Users under Key Mode needs to store the returned random password and pass it in when registering the certificate 
+                        name = reqBody.name,//one user can only be registered once, the second call returns a failed registration
+                        secret = reqBody.secret//If the password is empty, a random password will be returned. Users under Key Mode needs to store the returned random password and pass it in when registering the certificate
                     },
                     header = new ReqHeader()
                     {
@@ -130,12 +94,11 @@ namespace bsn_sdk_csharp.NodeExtends
                         userCode = config.userCode
                     }
                 };
-                // assemble the orginal string to sign 
+                // assemble the orginal string to sign
                 var data = ReqMacExtends.GetRegisterUserReqMac(req);
                 //data signature
-                byte[] singData = ECDSAHelper.SignData(data, config.appCert.UserAppPrivate);
-                //data encoded in Base64
-                req.mac = Convert.ToBase64String(singData);
+                req.mac = sign.Sign(data);
+
                 var res = SendHelper.SendPost<NodeApiResBody<RegisterUserResBody>>(config.reqUrl + registerUserUrl, JsonConvert.SerializeObject(req), config.httpsCert);
 
                 if (res != null)
@@ -144,8 +107,8 @@ namespace bsn_sdk_csharp.NodeExtends
                     if (res.header.code != 0) return new Tuple<bool, string, RegisterUserResBody>(false, res.header.msg, null);
                     //assemble the original string to verify
                     var datares = ResMacExtends.GetRegisterUserResMac(res);
-                    //data verified 
-                    if (ECDSAHelper.VerifyData(datares, res.mac, config.appCert.AppPublicCert))
+                    //data verified
+                    if (sign.Verify(res.mac, datares))
                     {
                         return new Tuple<bool, string, RegisterUserResBody>(true, res.header.msg, res.body);
                     }
@@ -168,7 +131,7 @@ namespace bsn_sdk_csharp.NodeExtends
         /// <param name="config">basic information</param>
         /// <param name="reqBody">user cert requests</param>
         /// <returns></returns>
-        public static Tuple<bool, string> EnrollUser(AppSetting config, EnrollUserReqBody reqBody)
+        public Tuple<bool, string> EnrollUser(EnrollUserReqBody reqBody)
         {
             try
             {
@@ -186,26 +149,23 @@ namespace bsn_sdk_csharp.NodeExtends
                     }
                 };
                 ////get csr
-                var resCsr = CsrHelper.GetCsr(string.Format("{0}@{1}", reqBody.name, config.appInfo.AppCode));
-
-                req.body.csrPem = resCsr.Item1;
+                var resCsr = config.appInfo.AlgorithmType == EmAlgorithmType.SM2 ?
+                  CsrHelper.GetSMCsr(string.Format("{0}@{1}", reqBody.name, config.appInfo.AppCode))
+                  : CsrHelper.GetCsr(string.Format("{0}@{1}", reqBody.name, config.appInfo.AppCode));
                 // assemble the original string to sign
                 var data = ReqMacExtends.GetEnrollUserReqMac(req);
-                //to sign the data
-                byte[] singData = ECDSAHelper.SignData(data, config.appCert.UserAppPrivate);
-                //data encoded in Base64
-                req.mac = Convert.ToBase64String(singData);
+                req.mac = sign.Sign(data);
                 var res = SendHelper.SendPost<NodeApiResBody<EnrollUserResBody>>(config.reqUrl + EnrollUserUrl, JsonConvert.SerializeObject(req), config.httpsCert);
                 if (res != null)
                 {
-                    //check the status codes in turn 
+                    //check the status codes in turn
                     if (res.header.code != 0) return new Tuple<bool, string>(false, res.header.msg);
                     //assemble the original string to sign
                     var datares = ResMacExtends.GetEnrollUserResMac(res);
-                    //verify data 
-                    if (ECDSAHelper.VerifyData(datares, res.mac, config.appCert.AppPublicCert))
+                    //verify data
+                    if (sign.Verify(res.mac, datares))
                     {
-                        //save the private key and cert 
+                        //save the private key and cert
                         if (!string.IsNullOrEmpty(res.body.cert))
                         {
                             CertStore.SaveCert(res.body.cert, Path.Combine(config.mspDir, string.Format("{0}@{1}_cert.pem", reqBody.name, config.appInfo.AppCode)));
@@ -227,12 +187,12 @@ namespace bsn_sdk_csharp.NodeExtends
         }
 
         /// <summary>
-        /// get transaction info 
+        /// get transaction info
         /// </summary>
         /// <param name="config"></param>
         /// <param name="reqBody"></param>
         /// <returns></returns>
-        public static Tuple<bool, string, GetTransResBody> GetTransaction(AppSetting config, GetTransReqBody reqBody)
+        public Tuple<bool, string, GetTransResBody> GetTransaction(GetTransReqBody reqBody)
         {
             try
             {
@@ -248,21 +208,20 @@ namespace bsn_sdk_csharp.NodeExtends
                         userCode = config.userCode
                     }
                 };
-                //assemble the string to sign 
+                //assemble the string to sign
                 var data = ReqMacExtends.GetTransactionReqMac(req);
-                //sign the data 
-                byte[] singData = ECDSAHelper.SignData(data, config.appCert.UserAppPrivate);
-                //data encoded in Base64
-                req.mac = Convert.ToBase64String(singData);
+                //sign the data
+                req.mac = sign.Sign(data);
+
                 var res = SendHelper.SendPost<NodeApiResBody<GetTransResBody>>(config.reqUrl + GetTransUrl, JsonConvert.SerializeObject(req), config.httpsCert);
                 if (res != null)
                 {
-                    //check the status codes in turn 
+                    //check the status codes in turn
                     if (res.header.code != 0) return new Tuple<bool, string, GetTransResBody>(false, res.header.msg, null);
-                    //assemble the original string to sign 
+                    //assemble the original string to sign
                     var datares = ResMacExtends.GetTransactionResMac(res);
-                    //verify data 
-                    if (ECDSAHelper.VerifyData(datares, res.mac, config.appCert.AppPublicCert))
+                    //verify data
+                    if (sign.Verify(res.mac, datares))
                     {
                         return new Tuple<bool, string, GetTransResBody>(true, res.header.msg, res.body);
                     }
@@ -285,7 +244,7 @@ namespace bsn_sdk_csharp.NodeExtends
         /// <param name="config"></param>
         /// <param name="reqBody"></param>
         /// <returns></returns>
-        public static Tuple<bool, string, GetBlockResBody> GetBlockInfo(AppSetting config, GetBlockReqBody reqBody)
+        public Tuple<bool, string, GetBlockResBody> GetBlockInfo(GetBlockReqBody reqBody)
         {
             try
             {
@@ -303,12 +262,11 @@ namespace bsn_sdk_csharp.NodeExtends
                         userCode = config.userCode
                     }
                 };
-                //assemble the string to sign 
+                //assemble the string to sign
                 var data = ReqMacExtends.GetBlockInfoReqMac(req);
-                //sign the data 
-                byte[] singData = ECDSAHelper.SignData(data, config.appCert.UserAppPrivate);
-                //data encoded in Base64
-                req.mac = Convert.ToBase64String(singData);
+                //sign the data
+                req.mac = sign.Sign(data);
+
                 var res = SendHelper.SendPost<NodeApiResBody<GetBlockResBody>>(config.reqUrl + GetBlockUrl, JsonConvert.SerializeObject(req), config.httpsCert);
                 if (res != null)
                 {
@@ -317,8 +275,8 @@ namespace bsn_sdk_csharp.NodeExtends
                     //Assemble the original string to sign
                     var datares = ResMacExtends.GetBlockInfoResMac(res);
 
-                    //verify data 
-                    if (ECDSAHelper.VerifyData(datares, res.mac, config.appCert.AppPublicCert))
+                    //verify data
+                    if (sign.Verify(res.mac, datares))
                     {
                         return new Tuple<bool, string, GetBlockResBody>(true, res.header.msg, res.body);
                     }
@@ -336,11 +294,11 @@ namespace bsn_sdk_csharp.NodeExtends
         }
 
         /// <summary>
-        /// get the ledger info 
+        /// get the ledger info
         /// </summary>
         /// <param name="config"></param>
         /// <returns></returns>
-        public static Tuple<bool, string, GetLedgerResBody> GetLedgerInfo(AppSetting config)
+        public Tuple<bool, string, GetLedgerResBody> GetLedgerInfo()
         {
             try
             {
@@ -354,10 +312,9 @@ namespace bsn_sdk_csharp.NodeExtends
                 };
                 //assemble the original string to sign
                 var data = ReqMacExtends.GetReqHeaderMac(req.header);
-                //sign data 
-                byte[] singData = ECDSAHelper.SignData(data, config.appCert.UserAppPrivate);
-                //data encoded in Base64
-                req.mac = Convert.ToBase64String(singData);
+                //sign data
+                req.mac = sign.Sign(data);
+
                 var res = SendHelper.SendPost<NodeApiResBody<GetLedgerResBody>>(config.reqUrl + GetLedgerUrl, JsonConvert.SerializeObject(req), config.httpsCert);
                 if (res != null)
                 {
@@ -367,7 +324,7 @@ namespace bsn_sdk_csharp.NodeExtends
                     var datares = ResMacExtends.GetLedgerInfoResMac(res);
 
                     //verify data
-                    if (ECDSAHelper.VerifyData(datares, res.mac, config.appCert.AppPublicCert))
+                    if (sign.Verify(res.mac, datares))
                     {
                         return new Tuple<bool, string, GetLedgerResBody>(true, res.header.msg, res.body);
                     }
@@ -385,12 +342,12 @@ namespace bsn_sdk_csharp.NodeExtends
         }
 
         /// <summary>
-        /// chaincode event registration 
+        /// chaincode event registration
         /// </summary>
         /// <param name="config"></param>
         /// <param name="reqBody"></param>
         /// <returns></returns>
-        public static Tuple<bool, string, EventRegisterResBody> EventRegister(AppSetting config, EventRegisterReqBody reqBody)
+        public Tuple<bool, string, EventRegisterResBody> EventRegister(EventRegisterReqBody reqBody)
         {
             try
             {
@@ -409,22 +366,21 @@ namespace bsn_sdk_csharp.NodeExtends
                         notifyUrl = reqBody.notifyUrl
                     }
                 };
-                //assemble the original string to sign 
+                //assemble the original string to sign
                 var data = ReqMacExtends.EventRegisterReqMac(req);
-                //sign data 
-                byte[] singData = ECDSAHelper.SignData(data, config.appCert.UserAppPrivate);
-                //data encoded in Base64
-                req.mac = Convert.ToBase64String(singData);
+                //sign data
+                req.mac = sign.Sign(data);
+
                 var res = SendHelper.SendPost<NodeApiResBody<EventRegisterResBody>>(config.reqUrl + EventRegisterUrl, JsonConvert.SerializeObject(req), config.httpsCert);
                 if (res != null)
                 {
-                    //check the status codes in turn 
+                    //check the status codes in turn
                     if (res.header.code != 0) return new Tuple<bool, string, EventRegisterResBody>(false, res.header.msg, null);
                     //assemble the original string to be checked
                     var datares = ResMacExtends.EventRegisterResMac(res);
 
-                    //verify data 
-                    if (ECDSAHelper.VerifyData(datares, res.mac, config.appCert.AppPublicCert))
+                    //verify data
+                    if (sign.Verify(res.mac, datares))
                     {
                         return new Tuple<bool, string, EventRegisterResBody>(true, res.header.msg, res.body);
                     }
@@ -447,7 +403,7 @@ namespace bsn_sdk_csharp.NodeExtends
         /// <param name="config"></param>
         /// <param name="reqBody"></param>
         /// <returns></returns>
-        public static Tuple<bool, string, List<EventQueryResBody>> EventQuery(AppSetting config)
+        public Tuple<bool, string, List<EventQueryResBody>> EventQuery()
         {
             try
             {
@@ -459,12 +415,11 @@ namespace bsn_sdk_csharp.NodeExtends
                         userCode = config.userCode
                     }
                 };
-                //assemble the original string 
+                //assemble the original string
                 var data = ReqMacExtends.GetReqHeaderMac(req.header);
                 //sign data
-                byte[] singData = ECDSAHelper.SignData(data, config.appCert.UserAppPrivate);
-                //Data encoded in Base64
-                req.mac = Convert.ToBase64String(singData);
+                req.mac = sign.Sign(data);
+
                 var res = SendHelper.SendPost<NodeApiResBody<List<EventQueryResBody>>>(config.reqUrl + EventQueryUrl, JsonConvert.SerializeObject(req), config.httpsCert);
                 if (res != null)
                 {
@@ -472,8 +427,8 @@ namespace bsn_sdk_csharp.NodeExtends
                     if (res.header.code != 0) return new Tuple<bool, string, List<EventQueryResBody>>(false, res.header.msg, null);
                     //assemble the original string to verify
                     var datares = ResMacExtends.EventQueryResMac(res);
-                    //verify data 
-                    if (ECDSAHelper.VerifyData(datares, res.mac, config.appCert.AppPublicCert))
+                    //verify data
+                    if (sign.Verify(res.mac, datares))
                     {
                         return new Tuple<bool, string, List<EventQueryResBody>>(true, res.header.msg, res.body);
                     }
@@ -496,7 +451,7 @@ namespace bsn_sdk_csharp.NodeExtends
         /// <param name="config"></param>
         /// <param name="reqBody"></param>
         /// <returns></returns>
-        public static Tuple<bool, string> EventRemove(AppSetting config, EventRemoveReqBody reqBody)
+        public Tuple<bool, string> EventRemove(EventRemoveReqBody reqBody)
         {
             try
             {
@@ -512,22 +467,21 @@ namespace bsn_sdk_csharp.NodeExtends
                         eventId = reqBody.eventId
                     }
                 };
-                //assemble the original string to sign 
+                //assemble the original string to sign
                 var data = ReqMacExtends.EventRemoveReqMac(req);
-                //sign data 
-                byte[] singData = ECDSAHelper.SignData(data, config.appCert.UserAppPrivate);
-                //data encoded in Base64
-                req.mac = Convert.ToBase64String(singData);
+                //sign data
+                req.mac = sign.Sign(data);
+
                 var res = SendHelper.SendPost<NodeApiRes>(config.reqUrl + EventRemoveUrl, JsonConvert.SerializeObject(req), config.httpsCert);
                 if (res != null)
                 {
-                    //check the status codes in turn 
+                    //check the status codes in turn
                     if (res.header.code != 0) return new Tuple<bool, string>(false, res.header.msg);
-                    //assemble the original string to sign 
+                    //assemble the original string to sign
                     var datares = ResMacExtends.GetResHeaderMac(res.header);
 
-                    //verify data 
-                    if (ECDSAHelper.VerifyData(datares, res.mac, config.appCert.AppPublicCert))
+                    //verify data
+                    if (sign.Verify(res.mac, datares))
                     {
                         return new Tuple<bool, string>(true, res.header.msg);
                     }
@@ -545,12 +499,12 @@ namespace bsn_sdk_csharp.NodeExtends
         }
 
         /// <summary>
-        /// transactions under Key-Trust Mode 
+        /// transactions under Key-Trust Mode
         /// </summary>
         /// <param name="config"></param>
         /// <param name="reqBody"></param>
         /// <returns></returns>
-        public static Tuple<bool, string, ReqChainCodeResBody> ReqChainCode(AppSetting config, ReqChainCodeReqBody reqBody)
+        public Tuple<bool, string, ReqChainCodeResBody> ReqChainCode(ReqChainCodeReqBody reqBody)
         {
             try
             {
@@ -563,22 +517,21 @@ namespace bsn_sdk_csharp.NodeExtends
                     },
                     body = reqBody
                 };
-                //assemble the original string to sign 
+                //assemble the original string to sign
                 var data = ReqMacExtends.ReqChainCodeReqMac(req);
-                //sign data 
-                byte[] singData = ECDSAHelper.SignData(data, config.appCert.UserAppPrivate);
-                //Data encoded in Base64
-                req.mac = Convert.ToBase64String(singData);
+                //sign data
+                req.mac = sign.Sign(data);
+
                 var res = SendHelper.SendPost<NodeApiResBody<ReqChainCodeResBody>>(config.reqUrl + ReqChainCodeUrl, JsonConvert.SerializeObject(req), config.httpsCert);
                 if (res != null)
                 {
-                    //check the status codes in turn 
+                    //check the status codes in turn
                     if (res.header.code != 0) return new Tuple<bool, string, ReqChainCodeResBody>(false, res.header.msg, null);
                     //assemble the original string to sign
                     var datares = ResMacExtends.ReqChainCodeResMac(res);
 
                     //verify data
-                    if (ECDSAHelper.VerifyData(datares, res.mac, config.appCert.AppPublicCert))
+                    if (sign.Verify(res.mac, datares))
                     {
                         return new Tuple<bool, string, ReqChainCodeResBody>(true, res.header.msg, res.body);
                     }
@@ -596,12 +549,12 @@ namespace bsn_sdk_csharp.NodeExtends
         }
 
         /// <summary>
-        /// transaction processing under Key-Trust Mode 
+        /// transaction processing under Key-Trust Mode
         /// </summary>
         /// <param name="config"></param>
         /// <param name="reqBody"></param>
         /// <returns></returns>
-        public static Tuple<bool, string, ReqChainCodeResBody> Trans(AppSetting config, TransRequest reqBody)
+        public Tuple<bool, string, ReqChainCodeResBody> Trans(TransRequest reqBody)
         {
             try
             {
@@ -617,12 +570,11 @@ namespace bsn_sdk_csharp.NodeExtends
                         transData = Transaction.CreateRequest(config, reqBody)
                     }
                 };
-                //Assemble the original string to sign 
+                //Assemble the original string to sign
                 var data = ReqMacExtends.TransReqMac(req);
-                //sign data 
-                byte[] singData = ECDSAHelper.SignData(data, config.appCert.UserAppPrivate);
-                //data encoded in Base64
-                req.mac = Convert.ToBase64String(singData);
+                //sign data
+                req.mac = sign.Sign(data);
+
                 var res = SendHelper.SendPost<NodeApiResBody<ReqChainCodeResBody>>(config.reqUrl + TransUrl, JsonConvert.SerializeObject(req), config.httpsCert);
                 if (res != null)
                 {
@@ -631,8 +583,8 @@ namespace bsn_sdk_csharp.NodeExtends
                     //assemble the original string to sign
                     var datares = ResMacExtends.ReqChainCodeResMac(res);
 
-                    //verify data 
-                    if (ECDSAHelper.VerifyData(datares, res.mac, config.appCert.AppPublicCert))
+                    //verify data
+                    if (sign.Verify(res.mac, datares))
                     {
                         return new Tuple<bool, string, ReqChainCodeResBody>(true, res.header.msg, res.body);
                     }

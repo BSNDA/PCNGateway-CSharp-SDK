@@ -3,6 +3,54 @@
 
 ## SDK in csharp
 
+## framework and key support
+
+>Currently, SDK in CSharp supports all framework and key combination applications on the official website
+
+具体如下：
+
+<table>
+<tr>
+<th rowspan="2">framework</th>
+<th colspan="3" >public key upload mode</th>
+<th colspan="3" >key trust mode</th>
+</tr>
+<tr>
+<th>secp256r1</th>
+<th>secp256k1</th>
+<th>SM2</th>
+<th>secp256r1</th>
+<th>secp256k1</th>
+<th>SM2</th>
+</tr>
+<tr>
+<td>Fabric</td>
+<td>√</td>
+<td></td>
+<td>√</td>
+<td>√</td>
+<td></td>
+<td>√</td>
+</tr>
+<tr>
+<td>FISCO-BCOS</td>
+<td></td>
+<td>√</td>
+<td>√</td>
+<td></td>
+<td>√</td>
+<td>√</td>
+</tr>
+<tr>
+<td>XuperChain</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td>√</td>
+</tr>
+</table>
 ### 1. Before calling 
 
 #### DApp parameter
@@ -27,7 +75,8 @@ using bsn_sdk_csharp;
 #### Description of architechture 
    Certs：used for storing certs;   
    Csr：used to store the public library of generated CSR request files. 
-   Ecdsa：used to store the tools of ecdsa ECC;    
+   Ecdsa：used to store the tools of ecdsa ECC; 
+   ETH：used to store eth tools；   
    Enum：used to store parameter enumeration；  
    Lib：used to store random number algorithm and AES and RSA encryption and decryption tools.  
    Models：used to define the message data structure of request and response of PCN gateway 
