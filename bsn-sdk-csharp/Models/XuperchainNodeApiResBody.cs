@@ -5,7 +5,8 @@ namespace bsn_sdk_csharp.Models
 {
     public class RegisterUserResDataBody
     {
-        public string AccAddr { get; set; }
+        public string userId { get; set; }
+        public string userAddr { get; set; }
     }
 
     public class CallContractResDataBody

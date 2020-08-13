@@ -10,7 +10,8 @@ namespace bsn_sdk_csharp.NodeExtends
             //assemble the original string to verify
             StringBuilder strRes = new StringBuilder();
             strRes.Append(GetResHeaderMac(res.header))
-                      .Append(res.body.AccAddr);
+                      .Append(res.body.userId)
+                      .Append(res.body.userAddr);
             return strRes.ToString();
         }
 
