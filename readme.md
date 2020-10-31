@@ -7,7 +7,7 @@
 
 >Currently, SDK in CSharp supports all framework and key combination applications on the official website
 
-具体如下：
+The details are as follows：
 
 <table>
 <tr>
@@ -50,7 +50,25 @@
 <td></td>
 <td>√</td>
 </tr>
+<tr>
+<td>Cita</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td>√</td>
+</tr>
 </table>
+
+* Fabric framework application uses two modes: secret key escrow and secret key upload of secp256r1 and SM2;
+
+* Fisco-bcos framework uses two modes: secret key hosting and secret key uploading of secp256k1 and SM2;
+
+* Xuperchain framework application only supports SM2 key escrow mode;
+
+* CITA framework application only supports SM2 key escrow mode;
+
 ### 1. Before calling 
 
 #### DApp parameter
