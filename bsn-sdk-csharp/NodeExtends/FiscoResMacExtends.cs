@@ -150,12 +150,12 @@ namespace bsn_sdk_csharp.NodeExtends
                 string eventMac = string.Empty;
                 foreach (ContractEvent t in res.body.ContractEvent)
                 {
-                    eventMac += t.Event.EventId;
-                    eventMac += t.Event.AppCode;
-                    eventMac += t.Event.UserCode;
-                    eventMac += t.Event.NotifyUrl;
-                    eventMac += t.Event.AttachArgs;
-                    eventMac += t.Event.CreateTime;
+                    eventMac += t.EventId;
+                    eventMac += t.AppCode;
+                    eventMac += t.UserCode;
+                    eventMac += t.NotifyUrl;
+                    eventMac += t.AttachArgs;
+                    eventMac += t.CreateTime;
                     eventMac += t.ContractAddress;
                 }
                 strRes.Append(eventMac);

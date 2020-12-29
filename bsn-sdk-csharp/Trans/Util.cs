@@ -27,6 +27,23 @@ namespace bsn_sdk_csharp.Trans
         }
 
         /// <summary>
+        /// Convert class ByteString
+        /// </summary>
+        /// <param name="msg"></param>
+        /// <returns></returns>
+        public static byte[] MarshalByte(Google.Protobuf.IMessage msg)
+        {
+            using (System.IO.MemoryStream ms = new System.IO.MemoryStream())
+            {
+                var s = new Google.Protobuf.CodedOutputStream(ms);
+                msg.WriteTo(s);
+                s.Flush();
+
+                return ms.ToArray();
+            }
+        }
+
+        /// <summary>
         /// convert CharacterString to ByteString
         /// </summary>
         /// <param name="str"></param>

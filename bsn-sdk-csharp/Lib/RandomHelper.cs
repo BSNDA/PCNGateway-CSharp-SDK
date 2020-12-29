@@ -21,6 +21,11 @@ namespace bsn_sdk_csharp.Lib
             return Convert.ToBase64String(GetRandomBytes(NonceSize));
         }
 
+        public static string GetRandomNonce(int len)
+        {
+            return Convert.ToBase64String(GetRandomBytes(len));
+        }
+
         public static byte[] GetRandomNonceByte()
         {
             return GetRandomBytes(NonceSize);

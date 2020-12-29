@@ -104,10 +104,8 @@ namespace bsn_sdk_csharp.Models
         public string CreateTime { get; set; }
     }
 
-    public class ContractEvent
+    public class ContractEvent : Event
     {
-        public Event Event { get; set; }
-
         public string ContractAddress { get; set; }
     }
 

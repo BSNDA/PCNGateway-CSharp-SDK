@@ -41,6 +41,35 @@ namespace bsn_sdk_csharp.NodeExtends
             return strBuilder.ToString();
         }
 
+        public static string GetSDKTransReqMac(NodeApiReqBody<CitaTransReqBody> req)
+        {
+            StringBuilder strBuilder = new StringBuilder();
+            strBuilder.Append(GetReqHeaderMac(req.header))
+                      .Append(req.body.ContractName)
+                      .Append(req.body.TransData);
+            return strBuilder.ToString();
+        }
+
+        public static string GetCitaEventRegisterReqMac(NodeApiReqBody<CitaRegisterEventReqDataBody> req)
+        {
+            StringBuilder strBuilder = new StringBuilder();
+            strBuilder.Append(GetReqHeaderMac(req.header))
+                      .Append(req.body.EventType)
+                      .Append(req.body.ContractAddress)
+                      .Append(req.body.ContractName)
+                      .Append(req.body.NotifyUrl)
+                      .Append(req.body.AttachArgs);
+            return strBuilder.ToString();
+        }
+
+        public static string GetCitaEventRemoveReqMac(NodeApiReqBody<CitaRemoveEventReqDataBody> req)
+        {
+            StringBuilder strBuilder = new StringBuilder();
+            strBuilder.Append(GetReqHeaderMac(req.header))
+                      .Append(req.body.EventId);
+            return strBuilder.ToString();
+        }
+
         public static string GetReqHeaderMac(ReqHeader header)
         {
             StringBuilder strRes = new StringBuilder();

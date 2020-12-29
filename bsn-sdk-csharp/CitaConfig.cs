@@ -1,7 +1,10 @@
-﻿using bsn_sdk_csharp.Enum;
+﻿using bsn_sdk_csharp.Common;
+using bsn_sdk_csharp.Ecdsa;
+using bsn_sdk_csharp.Enum;
 using bsn_sdk_csharp.Models;
 using bsn_sdk_csharp.NodeExtends;
 using Newtonsoft.Json;
+using Org.BouncyCastle.Crypto.Parameters;
 using System;
 using System.IO;
 
@@ -69,11 +72,54 @@ namespace bsn_sdk_csharp
                     a.appInfo.AlgorithmType = EmAlgorithmType.From(res.Item3.algorithmType);
                     a.appInfo.ChannelId = res.Item3.channelId;
                     a.appInfo.MspId = res.Item3.mspId;
+                    a.appInfo.Version = res.Item3.version;
                 }
                 else//the call to gateway failed to return
                 {
                     System.Console.WriteLine("failed to retrieve app info");
                 }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public static ECKeyPair GetUserKey(string userName, AppSetting a)
+        {
+            try
+            {
+                var prikurl = a.mspDir + "/" + userName + "@" + a.appInfo.AppCode + "_prik";
+                var pubkurl = a.mspDir + "/" + userName + "@" + a.appInfo.AppCode + "_pubk";
+                ECKeyPair key = new ECKeyPair();
+
+                if (!File.Exists(prikurl))
+                {
+                    if (a.appInfo.AlgorithmType == EmAlgorithmType.SM2)
+                    {
+                        var sm2key = SM2.SM2Utils.GenerateKeyPair();
+
+                        ECDSAStore.SavePriKey((ECPrivateKeyParameters)sm2key.Private, prikurl);
+                        ECDSAStore.SavePubKey((ECPublicKeyParameters)sm2key.Public, pubkurl);
+                        key.prik = (ECPrivateKeyParameters)sm2key.Private;
+                        key.pubk = (ECPublicKeyParameters)sm2key.Public;
+                    }
+                    else
+                    {
+                        var k1key = Ecdsa.ECDSAUtils.GenerateSecP256k1KeyPair();
+                        ECDSAStore.SavePriKey(k1key.Private, prikurl);
+                        ECDSAStore.SavePubKey(k1key.Public, pubkurl);
+                        key.prik = (ECPrivateKeyParameters)k1key.Private;
+                        key.pubk = (ECPublicKeyParameters)k1key.Public;
+                    }
+                }
+                else
+                {
+                    key.prik = LibraryHelper.loadprikey(prikurl);
+                    key.pubk = LibraryHelper.loadpubkey(pubkurl);
+                }
+
+                return key;
             }
             catch (Exception ex)
             {
@@ -93,22 +139,21 @@ namespace bsn_sdk_csharp
                 appCert = new AppCert()
                 {
                     AppPublicCert = @"-----BEGIN PUBLIC KEY-----
-MFkwEwYHKoZIzj0CAQYIKoEcz1UBgi0DQgAECwJ5ftuqndO9H3ks1hD8cB6IA9lx
-/b0Z2hnFZ77rgRm9Q4lY1aqIhkM63Lh6X7uwPsoRC1xkS0PMp5x/jnRWcw==
+MFkwEwYHKoZIzj0CAQYIKoEcz1UBgi0DQgAEIlh1C0iWAdcKnM/yAaZZT/42NVzT
+Vyr31H9MDhHbPkp+/B3gsp5iZOr6OTAGO9jpN10/YMIrxt2IMg5auIEvMA==
 -----END PUBLIC KEY-----",
                     UserAppPrivate = @"-----BEGIN PRIVATE KEY-----
-MIGTAgEAMBMGByqGSM49AgEGCCqBHM9VAYItBHkwdwIBAQQgklZqisUDvQHnsLRb
-oJo7bKbVW4V0vl9Gd5a/7iyVi1qgCgYIKoEcz1UBgi2hRANCAAQo16O+Via0yWIN
-M1Ps1mRG3QdVAVdSH+gCQ0mwUYnARQEnKLYWuPP9obvlnEj0+yZRjtX6drUpwwRj
-1MVtq4mA
------END PRIVATE KEY-----
-"
+MIGTAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBHkwdwIBAQQgfPng3pvsulMoOLNj
+LT5IUX0wXZQ7RRIgxQ6VGSDneOKgCgYIKoZIzj0DAQehRANCAAS+iGu+3yofOh0H
+74MQJQRivCXi6LtQGkrBe5NXAwL+8wAy+4iaESnIFsDFC2fr2qMgvd005UdvJeJu
+VQTCefws
+-----END PRIVATE KEY-----"
                 },
                 appInfo = new AppInfo()
                 {
-                    AppCode = "app0001202010291637539142476"
+                    AppCode = "app0001202012111600499234472"
                 },
-                userCode = "USER0001202007221349011109723",
+                userCode = "USER0001202007101641243516163",
                 mspDir = "D:/csharp/bsn-sdk-csharp/Certs",
                 httpsCert = "D:/csharp/bsn-sdk-csharp/Certs/bsn_gateway_https.crt"
             };

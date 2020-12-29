@@ -89,5 +89,10 @@ namespace bsn_sdk_csharp
         /// DApp channel
         /// </summary>
         public string ChannelId { get; set; }
+
+        /// <summary>
+        /// Version number
+        /// </summary>
+        public string Version { get; set; }
     }
 }

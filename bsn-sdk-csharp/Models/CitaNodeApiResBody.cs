@@ -111,4 +111,16 @@ namespace bsn_sdk_csharp.Models
 
         public string Data { get; set; }
     }
+
+    public class CitaRegisterEventResData
+    {
+        public string EventId { get; set; }
+    }
+
+    public class CitaQueryEventResData
+    {
+        public List<Event> BlockEvent { get; set; }
+
+        public List<ContractEvent> ContractEvent { get; set; }
+    }
 }

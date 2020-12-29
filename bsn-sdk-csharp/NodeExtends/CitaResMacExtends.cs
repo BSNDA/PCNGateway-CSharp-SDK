@@ -146,5 +146,52 @@ namespace bsn_sdk_csharp.NodeExtends
                       .Append(res.body.Data);
             return strRes.ToString();
         }
+
+        public static string GetCitaEventRegisterResMac(NodeApiResBody<CitaRegisterEventResData> res)
+        {
+            //assemble the original string to verify
+            StringBuilder strRes = new StringBuilder();
+            strRes.Append(GetResHeaderMac(res.header))
+                      .Append(res.body.EventId);
+            return strRes.ToString();
+        }
+
+        public static string GetCitaQueryEventResMac(NodeApiResBody<CitaQueryEventResData> res)
+        {
+            //assemble the original string to verify
+            StringBuilder strRes = new StringBuilder();
+            strRes.Append(GetResHeaderMac(res.header));
+
+            if (res.body.BlockEvent != null && res.body.BlockEvent.Count > 0)
+            {
+                string eventMac = string.Empty;
+                foreach (Event t in res.body.BlockEvent)
+                {
+                    eventMac += t.EventId;
+                    eventMac += t.AppCode;
+                    eventMac += t.UserCode;
+                    eventMac += t.NotifyUrl;
+                    eventMac += t.AttachArgs;
+                    eventMac += t.CreateTime;
+                }
+                strRes.Append(eventMac);
+            }
+            if (res.body.ContractEvent != null && res.body.ContractEvent.Count > 0)
+            {
+                string eventMac = string.Empty;
+                foreach (ContractEvent t in res.body.ContractEvent)
+                {
+                    eventMac += t.EventId;
+                    eventMac += t.AppCode;
+                    eventMac += t.UserCode;
+                    eventMac += t.NotifyUrl;
+                    eventMac += t.AttachArgs;
+                    eventMac += t.CreateTime;
+                    eventMac += t.ContractAddress;
+                }
+                strRes.Append(eventMac);
+            }
+            return strRes.ToString();
+        }
     }
 }

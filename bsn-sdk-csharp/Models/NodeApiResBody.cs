@@ -90,6 +90,11 @@ namespace bsn_sdk_csharp.Models
         /// Change the DApp channel from Fabric to channelId, fisco togroupId
         /// </summary>
         public string channelId { get; set; }
+
+        /// <summary>
+        /// version
+        /// </summary>
+        public string version { get; set; }
     }
 
     /// <summary>

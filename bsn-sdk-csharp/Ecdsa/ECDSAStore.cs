@@ -2,6 +2,7 @@
 using Org.BouncyCastle.Asn1.Pkcs;
 using Org.BouncyCastle.Asn1.X509;
 using Org.BouncyCastle.Crypto;
+using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Pkcs;
 using Org.BouncyCastle.Utilities.IO.Pem;
 using Org.BouncyCastle.X509;
@@ -50,6 +51,28 @@ namespace bsn_sdk_csharp.Ecdsa
                 byte[] pubInfoByte = aobject.GetEncoded();
                 FileStream fs = new FileStream(pkUrl, FileMode.Create, FileAccess.Write);
                 fs.Write(pubInfoByte, 0, pubInfoByte.Length);
+                fs.Close();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
+        public static bool SavePubKey(ECPublicKeyParameters publicKey, string pkUrl)
+        {
+            try
+            {
+                //save public key
+                SubjectPublicKeyInfo publicKeyInfo = SubjectPublicKeyInfoFactory.CreateSubjectPublicKeyInfo(publicKey);
+                PemObject pemObj = new PemObject("PUBLIC KEY", publicKeyInfo.ToAsn1Object().GetEncoded());
+                StringWriter strPri = new StringWriter();
+                Org.BouncyCastle.Utilities.IO.Pem.PemWriter pemW = new Org.BouncyCastle.Utilities.IO.Pem.PemWriter(strPri);
+                pemW.WriteObject(pemObj);
+                byte[] priInfoByte = System.Text.Encoding.UTF8.GetBytes(strPri.ToString());
+                FileStream fs = new FileStream(pkUrl, FileMode.Create, FileAccess.Write);
+                fs.Write(priInfoByte, 0, priInfoByte.Length);
                 fs.Close();
                 return true;
             }

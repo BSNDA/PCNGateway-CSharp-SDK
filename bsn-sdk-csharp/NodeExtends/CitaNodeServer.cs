@@ -1,4 +1,5 @@
-﻿using bsn_sdk_csharp.Models;
+﻿using bsn_sdk_csharp.Enum;
+using bsn_sdk_csharp.Models;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -42,6 +43,26 @@ namespace bsn_sdk_csharp.NodeExtends
         ///
         /// </summary>
         private string BlockInfoUrl = "/api/cita/v1/node/getBlockInfo";
+
+        /// <summary>
+        ///
+        /// </summary>
+        private string TransUrl = "/api/cita/v1/node/trans";
+
+        /// <summary>
+        ///
+        /// </summary>
+        private string EventRegisterUrl = "/api/cita/v1/event/register";
+
+        /// <summary>
+        ///
+        /// </summary>
+        private string EventQueryUrl = "/api/cita/v1/event/query";
+
+        /// <summary>
+        ///
+        /// </summary>
+        private string EventremoveUrl = "/api/cita/v1/event/remove";
 
         private ReqHeader GetReqHeader()
         {
@@ -293,6 +314,176 @@ namespace bsn_sdk_csharp.NodeExtends
                 throw ex;
             }
             return new Tuple<bool, string, CitaTransResBody>(false, "The deal failed", null);
+        }
+
+        public Tuple<bool, string, CitaTransResBody> SDKTrans(CitaTransReq reqBody)
+        {
+            try
+            {
+                if (config.appInfo.CAType == EmCAType.Trusteeship)
+                {
+                    return new Tuple<bool, string, CitaTransResBody>(false, "the trusteeship application cannot call the api", null);
+                }
+                var tx = new CitaClient(config).GetTransData(reqBody);
+                if (!string.IsNullOrEmpty(tx.Item2))
+                {
+                    return new Tuple<bool, string, CitaTransResBody>(false, tx.Item2, null);
+                }
+
+                NodeApiReqBody<CitaTransReqBody> req = new NodeApiReqBody<CitaTransReqBody>
+                {
+                    header = GetReqHeader()
+                };
+                req.body = new CitaTransReqBody()
+                {
+                    ContractName = reqBody.Contract.ContractName,
+                    TransData = "0x" + tx.Item1
+                };
+                req.mac = sign.Sign(CitaReqMacExtends.GetSDKTransReqMac(req));
+                var res = SendHelper.SendPost<NodeApiResBody<CitaTransResBody>>(config.reqUrl + TransUrl, JsonConvert.SerializeObject(req), config.httpsCert);
+
+                if (res != null)
+                {
+                    //Check the status codes in turn
+                    if (res.header.code != 0) return new Tuple<bool, string, CitaTransResBody>(false, res.header.msg, null);
+                    //assemble the original string to verify
+                    var datares = CitaResMacExtends.GetCitaTransactionResMac(res);
+                    //data verified
+                    if (sign.Verify(res.mac, datares))
+                    {
+                        return new Tuple<bool, string, CitaTransResBody>(true, res.header.msg, res.body);
+                    }
+                    else
+                    {
+                        return new Tuple<bool, string, CitaTransResBody>(false, "failed to verify the signature", null);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return new Tuple<bool, string, CitaTransResBody>(false, "The deal failed", null);
+        }
+
+        /// <summary>
+        /// chaincode event registration
+        /// </summary>
+        /// <param name="reqBody"></param>
+        /// <returns></returns>
+        public Tuple<bool, string, CitaRegisterEventResData> EventRegister(CitaRegisterEventReqDataBody reqBody)
+        {
+            try
+            {
+                NodeApiReqBody<CitaRegisterEventReqDataBody> req = new NodeApiReqBody<CitaRegisterEventReqDataBody>
+                {
+                    header = GetReqHeader(),
+                    body = reqBody
+                };
+                req.mac = sign.Sign(CitaReqMacExtends.GetCitaEventRegisterReqMac(req));
+                var res = SendHelper.SendPost<NodeApiResBody<CitaRegisterEventResData>>(config.reqUrl + EventRegisterUrl, JsonConvert.SerializeObject(req), config.httpsCert);
+
+                if (res != null)
+                {
+                    //Check the status codes in turn
+                    if (res.header.code != 0) return new Tuple<bool, string, CitaRegisterEventResData>(false, res.header.msg, null);
+                    //assemble the original string to verify
+                    var datares = CitaResMacExtends.GetCitaEventRegisterResMac(res);
+                    //data verified
+                    if (sign.Verify(res.mac, datares))
+                    {
+                        return new Tuple<bool, string, CitaRegisterEventResData>(true, res.header.msg, res.body);
+                    }
+                    else
+                    {
+                        return new Tuple<bool, string, CitaRegisterEventResData>(false, "failed to verify the signature", null);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return new Tuple<bool, string, CitaRegisterEventResData>(false, "failed to register chaincode event", null);
+        }
+
+        /// <summary>
+        /// event chaincode query
+        /// </summary>
+        /// <returns></returns>
+        public Tuple<bool, string, CitaQueryEventResData> EventQuery()
+        {
+            try
+            {
+                NodeApiReq req = new NodeApiReq()
+                {
+                    header = GetReqHeader()
+                };
+                req.mac = sign.Sign(CitaReqMacExtends.GetReqHeaderMac(req.header));
+                var res = SendHelper.SendPost<NodeApiResBody<CitaQueryEventResData>>(config.reqUrl + EventQueryUrl, JsonConvert.SerializeObject(req), config.httpsCert);
+
+                if (res != null)
+                {
+                    //Check the status codes in turn
+                    if (res.header.code != 0) return new Tuple<bool, string, CitaQueryEventResData>(false, res.header.msg, null);
+                    //assemble the original string to verify
+                    var datares = CitaResMacExtends.GetCitaQueryEventResMac(res);
+                    //data verified
+                    if (sign.Verify(res.mac, datares))
+                    {
+                        return new Tuple<bool, string, CitaQueryEventResData>(true, res.header.msg, res.body);
+                    }
+                    else
+                    {
+                        return new Tuple<bool, string, CitaQueryEventResData>(false, "failed to verify the signature", null);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return new Tuple<bool, string, CitaQueryEventResData>(false, "failed to query the chaincode", null);
+        }
+
+        /// <summary>
+        /// event chaincode logout
+        /// </summary>
+        /// <returns></returns>
+        public Tuple<bool, string, NodeApiRes> EventRemove(CitaRemoveEventReqDataBody reqBody)
+        {
+            try
+            {
+                NodeApiReqBody<CitaRemoveEventReqDataBody> req = new NodeApiReqBody<CitaRemoveEventReqDataBody>()
+                {
+                    header = GetReqHeader(),
+                    body = reqBody
+                };
+                req.mac = sign.Sign(CitaReqMacExtends.GetCitaEventRemoveReqMac(req));
+                var res = SendHelper.SendPost<NodeApiRes>(config.reqUrl + EventremoveUrl, JsonConvert.SerializeObject(req), config.httpsCert);
+
+                if (res != null)
+                {
+                    //Check the status codes in turn
+                    if (res.header.code != 0) return new Tuple<bool, string, NodeApiRes>(false, res.header.msg, null);
+                    //assemble the original string to verify
+                    var datares = ResMacExtends.GetResHeaderMac(res.header);
+                    //data verified
+                    if (sign.Verify(res.mac, datares))
+                    {
+                        return new Tuple<bool, string, NodeApiRes>(true, res.header.msg, res);
+                    }
+                    else
+                    {
+                        return new Tuple<bool, string, NodeApiRes>(false, "failed to verify the signature", null);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return new Tuple<bool, string, NodeApiRes>(false, "failed to logout event chaincode", null);
         }
     }
 }
