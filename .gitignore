@@ -8,3 +8,5 @@
 /bsn-sdk-csharp/obj
 /bsn-sdk-test/obj
 /bsn-sdk-csharp/bin/Release/netcoreapp3.1
+/bsn-sdk-csharp/Properties/PublishProfiles
+/bsn-sdk-csharp/bsn-sdk-csharp.csproj.user

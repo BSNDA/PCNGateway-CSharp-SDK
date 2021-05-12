@@ -202,7 +202,7 @@ PIXILYkE
         }
 
         /// <summary>
-        /// 
+        /// get appsetting from file
         /// </summary>
         /// <param name="path">config file path </param>
         /// <exception>file not exist</exception>
@@ -243,6 +243,10 @@ PIXILYkE
             return config;
         }
 
+        /// <summary>
+        /// Get default configuration from the config.json in the root directory 
+        /// </summary>
+        /// <returns></returns>
         public static AppSetting GetDefaultConfig()
         {
 
