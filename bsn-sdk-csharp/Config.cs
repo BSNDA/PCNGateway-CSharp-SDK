@@ -210,6 +210,10 @@ PIXILYkE
         public static AppSetting GetAppSettingFromFile(string path)
         {
 
+            if (string.IsNullOrEmpty(path)) {
+                path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "config.json");
+            }
+
             string content = LibraryHelper.ReadFile(path);
             if (string.IsNullOrEmpty(content))
             {
@@ -249,10 +253,7 @@ PIXILYkE
         /// <returns></returns>
         public static AppSetting GetDefaultConfig()
         {
-
-            string path = AppDomain.CurrentDomain.BaseDirectory + "/config.json";
-
-            return GetAppSettingFromFile(path);
+            return GetAppSettingFromFile(string.Empty);
 
         }
     }

@@ -10,3 +10,5 @@
 /bsn-sdk-csharp/bin/Release/netcoreapp3.1
 /bsn-sdk-csharp/Properties/PublishProfiles
 /bsn-sdk-csharp/bsn-sdk-csharp.csproj.user
+/bsn-sdk-csharp/bin
+/bsn-sdk-test/bin/Debug/netcoreapp3.1
