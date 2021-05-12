@@ -20,6 +20,18 @@ namespace bsn_sdk_csharp.NodeExtends
             config = _config;
         }
 
+        public NodeServer(string path)
+        {
+            AppSetting conf = Config.GetAppSettingFromFile(path);
+            base.SetConfig(conf);
+        }
+
+        public NodeServer()
+        {
+            AppSetting conf = Config.GetDefaultConfig();
+            base.SetConfig(conf);
+        }
+
         /// <summary>
         /// User registration URL
         /// </summary>

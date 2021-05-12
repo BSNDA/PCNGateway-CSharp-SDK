@@ -4,3 +4,7 @@
 
 /bsn-sdk-csharp/obj/Debug/netcoreapp3.1
 /bsn-sdk-test/obj/Debug/netcoreapp3.1
+/.vs/bsn-sdk-csharp
+/bsn-sdk-csharp/obj
+/bsn-sdk-test/obj
+/bsn-sdk-csharp/bin/Release/netcoreapp3.1

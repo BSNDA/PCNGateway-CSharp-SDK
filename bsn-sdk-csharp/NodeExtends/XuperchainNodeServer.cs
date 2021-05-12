@@ -13,6 +13,18 @@ namespace bsn_sdk_csharp.NodeExtends
             config = _config;
         }
 
+        public XuperchainNodeServer(string path)
+        {
+            AppSetting conf = Config.GetAppSettingFromFile(path);
+            base.SetConfig(conf);
+        }
+
+        public XuperchainNodeServer()
+        {
+            AppSetting conf = Config.GetDefaultConfig();
+            base.SetConfig(conf);
+        }
+
         private static string registerUserUrl = "/api/xuperchain/v1/user/register";
 
         private string ReqChainCodeUrl = "/api/xuperchain/v1/node/reqChainCode";

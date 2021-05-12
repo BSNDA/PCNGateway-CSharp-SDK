@@ -1,4 +1,5 @@
-﻿using bsn_sdk_csharp.Enum;
+﻿using bsn_sdk_csharp.Common;
+using bsn_sdk_csharp.Enum;
 using bsn_sdk_csharp.Models;
 using bsn_sdk_csharp.NodeExtends;
 using Newtonsoft.Json;
@@ -198,6 +199,57 @@ PIXILYkE
             }
             Init(config);
             return config;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="path">config file path </param>
+        /// <exception>file not exist</exception>
+        /// <returns></returns>
+        public static AppSetting GetAppSettingFromFile(string path)
+        {
+
+            string content = LibraryHelper.ReadFile(path);
+            if (string.IsNullOrEmpty(content))
+            {
+                throw new Exception("config does not exist");
+            }
+
+            FileConfig fileConf = JsonConvert.DeserializeObject<FileConfig>(content);
+
+            var config = new AppSetting()
+            {
+                reqUrl = fileConf.NodeApi,
+                appCert = new AppCert()
+                {
+                    AppPublicCert = fileConf.BsnPublicKey,
+                    UserAppPrivate = fileConf.UserPrivateKey,
+                },
+                appInfo = new AppInfo()
+                {
+                    AppCode = fileConf.AppCode,
+                },
+                userCode = fileConf.UserCode,
+                mspDir = fileConf.MspPath
+            };
+
+            if (!Directory.Exists(config.mspDir))
+            {
+                Directory.CreateDirectory(config.mspDir);
+            }
+            Init(config);
+
+            return config;
+        }
+
+        public static AppSetting GetDefaultConfig()
+        {
+
+            string path = AppDomain.CurrentDomain.BaseDirectory + "/config.json";
+
+            return GetAppSettingFromFile(path);
+
         }
     }
 }

@@ -79,5 +79,23 @@ namespace bsn_sdk_csharp.Common
             }
             return pk;
         }
+
+        /// <summary>
+        /// read file
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        public static string ReadFile(string path)
+        {
+            string content = string.Empty;
+            FileStream fileStream = new FileStream(path, FileMode.Open);
+            using (StreamReader reader = new StreamReader(fileStream))
+            {
+
+                content = reader.ReadToEnd();
+            }
+            return content;
+
+        }
     }
 }

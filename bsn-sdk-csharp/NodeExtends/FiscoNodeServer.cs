@@ -12,6 +12,18 @@ namespace bsn_sdk_csharp.NodeExtends
             config = _config;
         }
 
+        public FiscoNodeServer(string path)
+        {
+            AppSetting conf = Config.GetAppSettingFromFile(path);
+            base.SetConfig(conf);
+        }
+
+        public FiscoNodeServer()
+        {
+            AppSetting conf = Config.GetDefaultConfig();
+            base.SetConfig(conf);
+        }
+
         /// <summary>
         ///
         /// </summary>

@@ -14,6 +14,18 @@ namespace bsn_sdk_csharp.NodeExtends
             config = _config;
         }
 
+        public CitaNodeServer(string path)
+        {
+            AppSetting conf = Config.GetAppSettingFromFile(path);
+            base.SetConfig(conf);
+        }
+
+        public CitaNodeServer()
+        {
+            AppSetting conf = Config.GetDefaultConfig();
+            base.SetConfig(conf);
+        }
+
         /// <summary>
         ///
         /// </summary>
