@@ -6,7 +6,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Security.Cryptography;
 
 namespace bsn_sdk_test
 {
@@ -70,7 +69,20 @@ namespace bsn_sdk_test
             Console.WriteLine(JsonConvert.SerializeObject(res));
             Assert.IsNotNull(res);
         }
-
+        /// <summary>
+        /// get the data of transaction
+        /// </summary>
+        [TestMethod]
+        public void GetTransactionData()
+        {
+            var config = Config.NewMockConfig();
+            var res = new NodeServer(config).GetTransactionData(new bsn_sdk_csharp.Models.GetTransReqBody()
+            {
+                txId = "44876939fbea8adae1fe52901da410a0e957c0905450446ac17da242f591edab"
+            });
+            Console.WriteLine(JsonConvert.SerializeObject(res));
+            Assert.IsNotNull(res);
+        }
         /// <summary>
         /// get the information of block
         /// </summary>
@@ -85,7 +97,20 @@ namespace bsn_sdk_test
             Console.WriteLine(JsonConvert.SerializeObject(res));
             Assert.IsNotNull(res);
         }
-
+        /// <summary>
+        /// get the data of block
+        /// </summary>
+        [TestMethod]
+        public void GetBlockData()
+        {
+            var config = Config.NewMockConfig();
+            var res = new NodeServer(config).GetBlockData(new bsn_sdk_csharp.Models.GetBlockReqBody()
+            {
+                blockHash = "6081e24a259bed755747f35a7eb7df77247b1cba5c29a75d8857e90acdc78713"
+            });
+            Console.WriteLine(JsonConvert.SerializeObject(res));
+            Assert.IsNotNull(res);
+        }
         /// <summary>
         /// get ledger information
         /// </summary>
@@ -156,7 +181,7 @@ namespace bsn_sdk_test
             {
                 args = new string[] { "{\"baseKey\":\"test20200421\",\"baseValue\":\"this is string \"}" },
                 nonce = RandomHelper.GetRandomNonce(),
-                chainCode = "cc_cl1851016378620200413194550_00",
+                chainCode = "cc_app0001202008181046408059749_01",
                 funcName = "set",
                 userName = "",
                 transientData = transdata

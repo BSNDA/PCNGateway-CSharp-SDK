@@ -9,7 +9,7 @@ namespace bsn_sdk_csharp.NodeExtends
     public class ReqMacExtends
     {
         /// <summary>
-        /// character string to sign to get the user registered 
+        /// character string to sign to get the user registered
         /// </summary>
         /// <param name="req"></param>
         /// <returns></returns>
@@ -24,7 +24,7 @@ namespace bsn_sdk_csharp.NodeExtends
         }
 
         /// <summary>
-        /// character string to sign to get user certificate request 
+        /// character string to sign to get user certificate request
         /// </summary>
         /// <param name="req"></param>
         /// <returns></returns>
@@ -46,7 +46,7 @@ namespace bsn_sdk_csharp.NodeExtends
         /// <returns></returns>
         public static string GetTransactionReqMac(NodeApiReqBody<GetTransReqBody> req)
         {
-            //assemble the original string to sign 
+            //assemble the original string to sign
             StringBuilder strBuilder = new StringBuilder();
             strBuilder.Append(GetReqHeaderMac(req.header))
                       .Append(req.body.txId);
@@ -60,7 +60,7 @@ namespace bsn_sdk_csharp.NodeExtends
         /// <returns></returns>
         public static string GetBlockInfoReqMac(NodeApiReqBody<GetBlockReqBody> req)
         {
-            //assemble the original character string to sign 
+            //assemble the original character string to sign
             StringBuilder strBuilder = new StringBuilder();
             strBuilder.Append(GetReqHeaderMac(req.header))
                       .Append(req.body.blockNumber)
@@ -70,13 +70,13 @@ namespace bsn_sdk_csharp.NodeExtends
         }
 
         /// <summary>
-        /// character string to sign to register event chaincode
+        /// character string to sign to register event 
         /// </summary>
         /// <param name="req"></param>
         /// <returns></returns>
         public static string EventRegisterReqMac(NodeApiReqBody<EventRegisterReqBody> req)
         {
-            //assemble the original character string 
+            //assemble the original character string
             StringBuilder strBuilder = new StringBuilder();
             strBuilder.Append(GetReqHeaderMac(req.header))
                       .Append(req.body.chainCode)
@@ -87,13 +87,13 @@ namespace bsn_sdk_csharp.NodeExtends
         }
 
         /// <summary>
-        /// character string to sign to logout event chaincode
+        /// character string to sign to logout event 
         /// </summary>
         /// <param name="req"></param>
         /// <returns></returns>
         public static string EventRemoveReqMac(NodeApiReqBody<EventRemoveReqBody> req)
         {
-            //assemble original character string 
+            //assemble original character string
             StringBuilder strBuilder = new StringBuilder();
             strBuilder.Append(GetReqHeaderMac(req.header))
                       .Append(req.body.eventId);
@@ -101,13 +101,13 @@ namespace bsn_sdk_csharp.NodeExtends
         }
 
         /// <summary>
-        ///character string to sign of transaction processing under password management mode 
+        ///character string to sign of transaction processing under key trust mode
         /// </summary>
         /// <param name="req"></param>
         /// <returns></returns>
         public static string ReqChainCodeReqMac(NodeApiReqBody<ReqChainCodeReqBody> req)
         {
-            //assemble the original string to sign 
+            //assemble the original string to sign
             StringBuilder strBuilder = new StringBuilder();
             strBuilder.Append(GetReqHeaderMac(req.header))
                           .Append(req.body.userName)
@@ -135,13 +135,13 @@ namespace bsn_sdk_csharp.NodeExtends
         }
 
         /// <summary>
-        /// character string to sign of transaction processing under random password mode 
+        /// character string to sign of transaction processing under key upload mode
         /// </summary>
         /// <param name="req"></param>
         /// <returns></returns>
         public static string TransReqMac(NodeApiReqBody<TransReqBody> req)
         {
-            //assemble the original character string 
+            //assemble the original character string
             StringBuilder strBuilder = new StringBuilder();
             strBuilder.Append(GetReqHeaderMac(req.header))
                           .Append(req.body.transData);
@@ -150,7 +150,7 @@ namespace bsn_sdk_csharp.NodeExtends
         }
 
         /// <summary>
-        /// concatenate the character string in the header 
+        /// concatenate the character string in the header
         /// </summary>
         /// <param name="header"></param>
         /// <returns></returns>

@@ -9,7 +9,7 @@ namespace bsn_sdk_csharp.Ecdsa
     public class ECDSAHelper
     {
         /// <summary>
-        /// sign data 
+        /// sign data
         /// </summary>
         /// <param name="macdata">source data</param>
         /// <param name="pkInfo">private key</param>
@@ -125,7 +125,7 @@ namespace bsn_sdk_csharp.Ecdsa
         }
 
         /// <summary>
-        /// read key file 
+        /// read key file
         /// </summary>
         /// <param name="keyUrl">file path</param>
         /// <returns>content of file</returns>

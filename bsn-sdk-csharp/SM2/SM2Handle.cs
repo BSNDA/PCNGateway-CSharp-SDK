@@ -11,8 +11,8 @@ namespace bsn_sdk_csharp.SM2
         public SM2Handle(string _prik, string _pubk)
         {
             key = new ECKeyPair();
-            key.prik = LibraryHelper.loadprikey(_prik);
-            key.pubk = LibraryHelper.loadpubkey(_pubk);
+            key.prik = LibraryHelper.LoadPrikey(_prik);
+            key.pubk = LibraryHelper.LoadPubkey(_pubk);
         }
 
         public byte[] Hash(byte[] msg)

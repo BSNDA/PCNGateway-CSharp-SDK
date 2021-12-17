@@ -1,8 +1,6 @@
 ﻿using bsn_sdk_csharp.Models;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace bsn_sdk_csharp.NodeExtends
 {
@@ -39,7 +37,11 @@ namespace bsn_sdk_csharp.NodeExtends
                 appCode = config.appInfo.AppCode
             };
         }
-
+        /// <summary>
+        /// user registration
+        /// </summary>
+        /// <param name="reqBody"></param>
+        /// <returns></returns>
         public Tuple<bool, string, RegisterUserResDataBody> RegisterUser(RegisterUserReqDataBody reqBody)
         {
             try
@@ -78,7 +80,11 @@ namespace bsn_sdk_csharp.NodeExtends
             }
             return new Tuple<bool, string, RegisterUserResDataBody>(false, "failed to register the user", null); ;
         }
-
+        /// <summary>
+        /// transactions under Key-Trust Mode
+        /// </summary>
+        /// <param name="reqBody"></param>
+        /// <returns></returns>
         public Tuple<bool, string, CallContractResDataBody> ReqChainCode(CallContractReqDataReqDataBody reqBody)
         {
             try
@@ -117,7 +123,11 @@ namespace bsn_sdk_csharp.NodeExtends
             }
             return new Tuple<bool, string, CallContractResDataBody>(false, "failed to transact", null);
         }
-
+        /// <summary>
+        /// get transaction info
+        /// </summary>
+        /// <param name="reqBody"></param>
+        /// <returns></returns>
         public Tuple<bool, string, XuperchainTransaction> GetTxInfo(GetTxInfoReqDataBody reqBody)
         {
             try
@@ -156,7 +166,11 @@ namespace bsn_sdk_csharp.NodeExtends
             }
             return new Tuple<bool, string, XuperchainTransaction>(false, "failed to transact", null);
         }
-
+        /// <summary>
+        /// get block info
+        /// </summary>
+        /// <param name="reqBody"></param>
+        /// <returns></returns>
         public Tuple<bool, string, XuperchainBlock> GetBlockInfo(GetBlockInfoReqDataBody reqBody)
         {
             try

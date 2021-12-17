@@ -16,9 +16,9 @@ namespace bsn_sdk_csharp
             config = _config;
             sign = SetAlgorithm(config.appInfo.AlgorithmType, config.appCert.AppPublicCert, config.appCert.UserAppPrivate);
         }
+
         public Client()
         {
-
         }
 
         public void SetConfig(AppSetting _config)

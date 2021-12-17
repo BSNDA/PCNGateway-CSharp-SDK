@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace bsn_sdk_csharp.Enum
 {
+    /// <summary>
+    /// algorithm type enumeration
+    /// </summary>
     public class EmAlgorithmType : Enumeration
     {
         private EmAlgorithmType()
@@ -15,7 +17,7 @@ namespace bsn_sdk_csharp.Enum
         private EmAlgorithmType(int value, string displayName) : base(value, displayName)
         {
         }
-
+    
         public static readonly EmAlgorithmType SM2 = new EmAlgorithmType(1, "SM2");
         public static readonly EmAlgorithmType Ecdsa = new EmAlgorithmType(2, "ECDSA(secp256r1)");
         public static readonly EmAlgorithmType Ecdsak1 = new EmAlgorithmType(3, "ECDSA(secp256k1)");

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace bsn_sdk_csharp
+﻿namespace bsn_sdk_csharp
 {
     public class FileConfig
     {
@@ -12,7 +8,5 @@ namespace bsn_sdk_csharp
         public string UserPrivateKey { get; set; }
         public string BsnPublicKey { get; set; }
         public string MspPath { get; set; }
-
-
     }
 }

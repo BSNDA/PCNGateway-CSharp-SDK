@@ -5,6 +5,11 @@ namespace bsn_sdk_csharp.NodeExtends
 {
     public class XuperchainReqMacExtends
     {
+        /// <summary>
+        /// character string to sign to get the user registered
+        /// </summary>
+        /// <param name="req"></param>
+        /// <returns></returns>
         public static string GetRegisterUserReqMac(NodeApiReqBody<RegisterUserReqDataBody> req)
         {
             StringBuilder strBuilder = new StringBuilder();
@@ -12,7 +17,11 @@ namespace bsn_sdk_csharp.NodeExtends
                       .Append(req.body.UserId);
             return strBuilder.ToString();
         }
-
+        /// <summary>
+        /// character string to sign of transaction processing under password management mode
+        /// </summary>
+        /// <param name="req"></param>
+        /// <returns></returns>
         public static string ReqChainCodeReqMac(NodeApiReqBody<CallContractReqDataReqDataBody> req)
         {
             StringBuilder strBuilder = new StringBuilder();
@@ -25,7 +34,11 @@ namespace bsn_sdk_csharp.NodeExtends
 
             return strBuilder.ToString();
         }
-
+        /// <summary>
+        /// character string to sign to get the block information 
+        /// </summary>
+        /// <param name="req"></param>
+        /// <returns></returns>
         public static string GetBlockInfoReqMac(NodeApiReqBody<GetBlockInfoReqDataBody> req)
         {
             StringBuilder strBuilder = new StringBuilder();
@@ -34,7 +47,11 @@ namespace bsn_sdk_csharp.NodeExtends
                           .Append(req.body.BlockHash);
             return strBuilder.ToString();
         }
-
+        /// <summary>
+        /// character string to sign to get the transaction information
+        /// </summary>
+        /// <param name="req"></param>
+        /// <returns></returns>
         public static string GetTxInfoReqMac(NodeApiReqBody<GetTxInfoReqDataBody> req)
         {
             StringBuilder strBuilder = new StringBuilder();

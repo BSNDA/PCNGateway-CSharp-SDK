@@ -5,18 +5,18 @@ using System.Text;
 namespace bsn_sdk_csharp.NodeExtends
 {
     /// <summary>
-    ///return parameters of concatenated and extended character string to sign 
+    ///return parameters of concatenated and extended character string to sign verification
     /// </summary>
     public class ResMacExtends
     {
         /// <summary>
-        /// get character string of user registration to sign 
+        /// get character string of user registration to sign verification
         /// </summary>
         /// <param name="res"></param>
         /// <returns></returns>
         public static string GetRegisterUserResMac(NodeApiResBody<RegisterUserResBody> res)
         {
-            //assemble the original string to verify 
+            //assemble the original string to verify
             StringBuilder strRes = new StringBuilder();
             strRes.Append(GetResHeaderMac(res.header))
                       .Append(res.body.name)
@@ -25,13 +25,13 @@ namespace bsn_sdk_csharp.NodeExtends
         }
 
         /// <summary>
-        /// character string of user cert request to sign 
+        /// character string of user cert request to sign verification
         /// </summary>
         /// <param name="res"></param>
         /// <returns></returns>
         public static string GetEnrollUserResMac(NodeApiResBody<EnrollUserResBody> res)
         {
-            //assemble the original string to verify 
+            //assemble the original string to verify
             StringBuilder strBuilder = new StringBuilder();
             strBuilder.Append(GetResHeaderMac(res.header))
                       .Append(res.body.cert);
@@ -39,13 +39,13 @@ namespace bsn_sdk_csharp.NodeExtends
         }
 
         /// <summary>
-        /// character string to sign to get the transaction information 
+        /// character string to sign verification to get the transaction information
         /// </summary>
         /// <param name="res"></param>
         /// <returns></returns>
         public static string GetTransactionResMac(NodeApiResBody<GetTransResBody> res)
         {
-            //assemble the original string to verify 
+            //assemble the original string to verify
             StringBuilder strBuilder = new StringBuilder();
             strBuilder.Append(GetResHeaderMac(res.header))
                       .Append(res.body.blockHash)
@@ -56,15 +56,28 @@ namespace bsn_sdk_csharp.NodeExtends
                               .Append(res.body.timeSpanNsec);
             return strBuilder.ToString();
         }
-
         /// <summary>
-        /// character string to sign to get the block information 
+        /// character string to sign verification to get the transaction data
+        /// </summary>
+        /// <param name="res"></param>
+        /// <returns></returns>
+        public static string GetTransactionDataResMac(NodeApiResBody<GetTransDataResBody> res)
+        {
+            //assemble the original string to verify
+            StringBuilder strBuilder = new StringBuilder();
+            strBuilder.Append(GetResHeaderMac(res.header))
+                      .Append(res.body.txId)
+                              .Append(res.body.transData);
+            return strBuilder.ToString();
+        }
+        /// <summary>
+        /// character string to sign verification to get the block information
         /// </summary>
         /// <param name="res"></param>
         /// <returns></returns>
         public static string GetBlockInfoResMac(NodeApiResBody<GetBlockResBody> res)
         {
-            //assemble the original string to verify 
+            //assemble the original string to verify
             StringBuilder strBuilder = new StringBuilder();
             strBuilder.Append(GetResHeaderMac(res.header))
                       .Append(res.body.blockHash)
@@ -89,13 +102,31 @@ namespace bsn_sdk_csharp.NodeExtends
         }
 
         /// <summary>
-        /// character string to sign to get the ledger information 
+        /// character string to sign verification to get the block information
+        /// </summary>
+        /// <param name="res"></param>
+        /// <returns></returns>
+        public static string GetBlockDataResMac(NodeApiResBody<GetBlockDataResBody> res)
+        {
+            //assemble the original string to verify
+            StringBuilder strBuilder = new StringBuilder();
+            strBuilder.Append(GetResHeaderMac(res.header))
+                      .Append(res.body.blockHash)
+                              .Append(res.body.blockNumber)
+                              .Append(res.body.preBlockHash)
+                              .Append(res.body.blockData);
+
+            return strBuilder.ToString();
+        }
+
+        /// <summary>
+        /// character string to sign verification to get the ledger information
         /// </summary>
         /// <param name="res"></param>
         /// <returns></returns>
         public static string GetLedgerInfoResMac(NodeApiResBody<GetLedgerResBody> res)
         {
-            //assemble the orginal string to verify 
+            //assemble the orginal string to verify
             StringBuilder strBuilder = new StringBuilder();
             strBuilder.Append(GetResHeaderMac(res.header))
                       .Append(res.body.blockHash)
@@ -106,13 +137,13 @@ namespace bsn_sdk_csharp.NodeExtends
         }
 
         /// <summary>
-        /// character string to sign to register event chaincode 
+        /// character string to sign verification to register event 
         /// </summary>
         /// <param name="req"></param>
         /// <returns></returns>
         public static string EventRegisterResMac(NodeApiResBody<EventRegisterResBody> res)
         {
-            //assemble the orginal string to verify 
+            //assemble the orginal string to verify
             StringBuilder strBuilder = new StringBuilder();
             strBuilder.Append(GetResHeaderMac(res.header))
                       .Append(res.body.eventId);
@@ -120,7 +151,7 @@ namespace bsn_sdk_csharp.NodeExtends
         }
 
         /// <summary>
-        /// character string of chaincode query to sign
+        /// character string of event query to sign verification
         /// </summary>
         /// <param name="req"></param>
         /// <returns></returns>
@@ -150,13 +181,13 @@ namespace bsn_sdk_csharp.NodeExtends
         }
 
         /// <summary>
-        ///character string to sign of transaction processing under password management mode
+        /// character string to sign verification of transaction processing under key trust mode
         /// </summary>
         /// <param name="req"></param>
         /// <returns></returns>
         public static string ReqChainCodeResMac(NodeApiResBody<ReqChainCodeResBody> res)
         {
-            //assemble the original string to verify 
+            //assemble the original string to verify
             StringBuilder strBuilder = new StringBuilder();
             strBuilder.Append(GetResHeaderMac(res.header));
             if (res.body.blockInfo != null)

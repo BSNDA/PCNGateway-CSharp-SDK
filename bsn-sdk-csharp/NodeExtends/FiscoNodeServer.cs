@@ -1,5 +1,4 @@
-﻿using bsn_sdk_csharp.Ecdsa;
-using bsn_sdk_csharp.Models;
+﻿using bsn_sdk_csharp.Models;
 using Newtonsoft.Json;
 using System;
 
@@ -133,7 +132,7 @@ namespace bsn_sdk_csharp.NodeExtends
         }
 
         /// <summary>
-        /// transaction
+        /// transaction processing under Key-Upload Mode
         /// </summary>
         /// <param name="reqBody"></param>
         /// <returns></returns>
@@ -225,7 +224,11 @@ namespace bsn_sdk_csharp.NodeExtends
             }
             return new Tuple<bool, string, FiscoRegisterUserResBody>(false, "用户注册失败", null); ;
         }
-
+        /// <summary>
+        /// transactions under Key-Trust Mode
+        /// </summary>
+        /// <param name="reqBody"></param>
+        /// <returns></returns>
         public Tuple<bool, string, FiscoTransResBody> ReqChainCode(FiscoTransReqDataBody reqBody)
         {
             try
@@ -468,7 +471,7 @@ namespace bsn_sdk_csharp.NodeExtends
         }
 
         /// <summary>
-        /// chaincode event registration
+        /// event registration
         /// </summary>
         /// <param name="reqBody"></param>
         /// <returns></returns>
@@ -509,7 +512,7 @@ namespace bsn_sdk_csharp.NodeExtends
         }
 
         /// <summary>
-        /// event chaincode query
+        /// event  query
         /// </summary>
         /// <returns></returns>
         public Tuple<bool, string, QueryEventResData> EventQuery()
@@ -548,7 +551,7 @@ namespace bsn_sdk_csharp.NodeExtends
         }
 
         /// <summary>
-        /// event chaincode logout
+        /// event  logout
         /// </summary>
         /// <returns></returns>
         public Tuple<bool, string, NodeApiRes> EventRemove(RemoveReqDataBody reqBody)

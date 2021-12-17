@@ -89,7 +89,7 @@ namespace bsn_sdk_csharp
         {
             var config = new AppSetting()
             {
-                reqUrl = "https://fuzhounode.bsngate.com:17602",
+                reqUrl = "http://192.168.1.1:17602",
                 appCert = new AppCert()
                 {
                     AppPublicCert = @"-----BEGIN PUBLIC KEY-----
@@ -97,10 +97,10 @@ MFkwEwYHKoZIzj0CAQYIKoEcz1UBgi0DQgAECwJ5ftuqndO9H3ks1hD8cB6IA9lx
 /b0Z2hnFZ77rgRm9Q4lY1aqIhkM63Lh6X7uwPsoRC1xkS0PMp5x/jnRWcw==
 -----END PUBLIC KEY-----",
                     UserAppPrivate = @"-----BEGIN PRIVATE KEY-----
-MIGTAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBHkwdwIBAQQgvIO1feuOt1eYnKei
-fXaZwJE03R3YhVUDsilniBdPfoWgCgYIKoZIzj0DAQehRANCAAR4mk3I6uTLL4Ac
-dbqB73MRtiMGsUIinJ96qLsfGIiG1LCIUBq2FwawCIOPTqbNqMzHlu3uC6/7QAjD
-YyYNaIkz
+MIGTAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBHkwdwIBAQQg9ZNsVRzwoLPfuQw2
+2kNdW58NZVReloUowMLhyMq8CHCgCgYIKoZIzj0DAQehRANCAASiutAdLg6Q7p29
+jTO6+BAtOWGM4sYZH+uR3H+6DaXNSM/YRTH+FahwNFZpBA5cvCjQOskz9/ScO0J+
+Mn0/OHhR
 -----END PRIVATE KEY-----
 "
                 },

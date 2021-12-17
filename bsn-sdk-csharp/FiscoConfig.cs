@@ -113,8 +113,8 @@ namespace bsn_sdk_csharp
                 }
                 else
                 {
-                    key.prik = LibraryHelper.loadprikey(prikurl);
-                    key.pubk = LibraryHelper.loadpubkey(pubkurl);
+                    key.prik = LibraryHelper.LoadPrikey(prikurl);
+                    key.pubk = LibraryHelper.LoadPubkey(pubkurl);
                 }
 
                 return key;

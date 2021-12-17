@@ -5,23 +5,32 @@ namespace bsn_sdk_csharp.NodeExtends
 {
     public class XuperchainResMacExtends
     {
+        /// <summary>
+        /// get character string of user registration to sign verification
+        /// </summary>
+        /// <param name="res"></param>
+        /// <returns></returns>
         public static string GetRegisterUserResMac(NodeApiResBody<RegisterUserResDataBody> res)
         {
             //assemble the original string to verify
             StringBuilder strRes = new StringBuilder();
             strRes.Append(GetResHeaderMac(res.header))
-                      .Append(res.body.userId)
-                      .Append(res.body.userAddr);
+                      .Append(res.body.UserId)
+                      .Append(res.body.UserAddr);
             return strRes.ToString();
         }
-
+        /// <summary>
+        /// character string to sign verification to get the block information
+        /// </summary>
+        /// <param name="res"></param>
+        /// <returns></returns>
         public static string GetBlockInfoResMac(NodeApiResBody<XuperchainBlock> res)
         {
             //assemble the original string to verify
             StringBuilder strBuilder = new StringBuilder();
             strBuilder.Append(GetResHeaderMac(res.header))
                       .Append(res.body.Version)
-                              .Append(res.body.Blockid)
+                              .Append(res.body.BlockId)
                               .Append(res.body.PreHash)
                               .Append(res.body.Height)
                               .Append(res.body.Timestamp);
@@ -30,8 +39,8 @@ namespace bsn_sdk_csharp.NodeExtends
                 string transMac = string.Empty;
                 foreach (XuperchainTransaction t in res.body.Transactions)
                 {
-                    transMac += t.Txid;
-                    transMac += t.Blockid;
+                    transMac += t.TxId;
+                    transMac += t.BlockId;
                     transMac += t.Version;
                     string contact = string.Empty;
                     if (t.ContractRequests != null && t.ContractRequests.Count > 0)
@@ -52,7 +61,11 @@ namespace bsn_sdk_csharp.NodeExtends
                 .Append(res.body.NextHash);
             return strBuilder.ToString();
         }
-
+        /// <summary>
+        /// character string to sign verification of transaction processing under key trust mode
+        /// </summary>
+        /// <param name="res"></param>
+        /// <returns></returns>
         public static string ReqChainCodeResMac(NodeApiResBody<CallContractResDataBody> res)
         {
             //assemble the original string to verify
@@ -63,14 +76,18 @@ namespace bsn_sdk_csharp.NodeExtends
 
             return strBuilder.ToString();
         }
-
+        /// <summary>
+        /// character string to sign verification to get the transaction information
+        /// </summary>
+        /// <param name="res"></param>
+        /// <returns></returns>
         public static string GetTxInfoResMac(NodeApiResBody<XuperchainTransaction> res)
         {
             //assemble the original string to verify
             StringBuilder strBuilder = new StringBuilder();
             strBuilder.Append(GetResHeaderMac(res.header))
-                      .Append(res.body.Txid)
-                              .Append(res.body.Blockid)
+                      .Append(res.body.TxId)
+                              .Append(res.body.BlockId)
                               .Append(res.body.Version);
 
             string contact = string.Empty;

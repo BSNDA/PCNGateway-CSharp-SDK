@@ -9,7 +9,7 @@ namespace bsn_sdk_csharp.Ecdsa
     public class ECDSAUtils
     {
         /// <summary>
-        /// 生成SecP256r1密钥
+        /// generate secP256r1 key
         /// </summary>
         public static AsymmetricCipherKeyPair GenerateSecP256r1KeyPair()
         {
@@ -20,7 +20,7 @@ namespace bsn_sdk_csharp.Ecdsa
         }
 
         /// <summary>
-        /// 生成SecP256k1密钥
+        /// generate secP256k1 key
         /// </summary>
         public static AsymmetricCipherKeyPair GenerateSecP256k1KeyPair()
         {

@@ -1,6 +1,4 @@
 ﻿using bsn_sdk_csharp.Models;
-using System;
-using System.Collections.Generic;
 using System.Text;
 
 namespace bsn_sdk_csharp.NodeExtends
@@ -14,16 +12,24 @@ namespace bsn_sdk_csharp.NodeExtends
                       .Append(header.msg);
             return strRes.ToString();
         }
-
+        /// <summary>
+        /// get character string of get the block heioght to sign verification
+        /// </summary>
+        /// <param name="res"></param>
+        /// <returns></returns>
         public static string GetBlockHeightResMac(NodeApiResBody<GetBlockHeightResBody> res)
         {
             //assemble the original string to verify
             StringBuilder strRes = new StringBuilder();
             strRes.Append(GetResHeaderMac(res.header))
-                      .Append(res.body.data);
+                      .Append(res.body.Data);
             return strRes.ToString();
         }
-
+        /// <summary>
+        /// character string to sign verification of transaction processing 
+        /// </summary>
+        /// <param name="res"></param>
+        /// <returns></returns>
         public static string GetFiscoTransactionResMac(NodeApiResBody<FiscoTransResBody> res)
         {
             //assemble the original string to verify
@@ -43,7 +49,11 @@ namespace bsn_sdk_csharp.NodeExtends
                       .Append(res.body.Logs);
             return strRes.ToString();
         }
-
+        /// <summary>
+        /// get character string of user registration to sign verification
+        /// </summary>
+        /// <param name="res"></param>
+        /// <returns></returns>
         public static string GetRegisterUserResMac(NodeApiResBody<FiscoRegisterUserResBody> res)
         {
             //assemble the original string to verify
@@ -53,7 +63,11 @@ namespace bsn_sdk_csharp.NodeExtends
                       .Append(res.body.UserAddress);
             return strRes.ToString();
         }
-
+        /// <summary>
+        /// get character string of to get the transaction receipt to sign verification
+        /// </summary>
+        /// <param name="res"></param>
+        /// <returns></returns>
         public static string GetFiscoTxReceiptResMac(NodeApiResBody<FiscoTxReceiptResBody> res)
         {
             //assemble the original string to verify
@@ -63,13 +77,16 @@ namespace bsn_sdk_csharp.NodeExtends
                       .Append(res.body.BlockHash)
                       .Append(res.body.BlockNumber)
                       .Append(res.body.GasUsed)
-                      .Append(res.body.Status)
                       .Append(res.body.From)
                       .Append(res.body.To)
                       .Append(res.body.ContractAddress);
             return strRes.ToString();
         }
-
+        /// <summary>
+        /// get character string of to get the transaction infomation to sign verification
+        /// </summary>
+        /// <param name="res"></param>
+        /// <returns></returns>
         public static string GetFiscoTxInfoResMac(NodeApiResBody<FiscoTransactionData> res)
         {
             //assemble the original string to verify
@@ -85,7 +102,11 @@ namespace bsn_sdk_csharp.NodeExtends
                       .Append(res.body.Input);
             return strRes.ToString();
         }
-
+        /// <summary>
+        /// get character string of to get the block infomation to sign verification
+        /// </summary>
+        /// <param name="res"></param>
+        /// <returns></returns>
         public static string GetFiscoBlockInfoResMac(NodeApiResBody<FiscoBlockData> res)
         {
             //assemble the original string to verify
@@ -115,7 +136,11 @@ namespace bsn_sdk_csharp.NodeExtends
             }
             return strRes.ToString();
         }
-
+        /// <summary>
+        /// character string to sign verification to get the event registered
+        /// </summary>
+        /// <param name="res"></param>
+        /// <returns></returns>
         public static string GetFiscoEventRegisterResMac(NodeApiResBody<RegisterEventResData> res)
         {
             //assemble the original string to verify
@@ -124,7 +149,11 @@ namespace bsn_sdk_csharp.NodeExtends
                       .Append(res.body.EventId);
             return strRes.ToString();
         }
-
+        /// <summary>
+        /// character string to sign verification to get the event removed
+        /// </summary>
+        /// <param name="res"></param>
+        /// <returns></returns>
         public static string GetFiscoQueryEventResMac(NodeApiResBody<QueryEventResData> res)
         {
             //assemble the original string to verify

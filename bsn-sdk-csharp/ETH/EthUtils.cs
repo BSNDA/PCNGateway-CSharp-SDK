@@ -1,8 +1,6 @@
-﻿using bsn_sdk_csharp.Common;
-using Nethereum.Signer;
+﻿using Nethereum.Signer;
 using Org.BouncyCastle.Asn1.Pkcs;
 using Org.BouncyCastle.Crypto.Parameters;
-using Org.BouncyCastle.Math;
 using Org.BouncyCastle.Pkcs;
 using Org.BouncyCastle.Utilities.IO.Pem;
 using System;
@@ -14,6 +12,11 @@ namespace bsn_sdk_csharp.ETH
 {
     public class EthUtils
     {
+        /// <summary>
+        /// Converts an string into a formatted string of hex digits (ex: E4 CA B2)
+        /// </summary>
+        /// <param name="privateKey">The string to be translated into a string of hex digits.</param>
+        /// <returns>Returns a well formatted string of hex digits with spacing.</returns>
         public static string ConvertPrikToHexString(string privateKey)
         {
             TextReader ptr = new StringReader(privateKey);

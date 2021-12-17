@@ -4,22 +4,38 @@ using System;
 
 namespace bsn_sdk_csharp.Ecdsa
 {
+    /// <summary>
+    /// ecdsa sign help class
+    /// </summary>
     public class ECDSAHandle : SignHandle
     {
+        /// <summary>
+        /// ecdsa key
+        /// </summary>
         public ECKeyPair key { get; set; }
 
         public ECDSAHandle(string _prik, string _pubk)
         {
             key = new ECKeyPair();
-            key.prik = LibraryHelper.loadprikey(_prik);
-            key.pubk = LibraryHelper.loadpubkey(_pubk);
+            key.prik = LibraryHelper.LoadPrikey(_prik);
+            key.pubk = LibraryHelper.LoadPubkey(_pubk);
         }
 
+        /// <summary>
+        /// hash calculation
+        /// </summary>
+        /// <param name="msg">soure data</param>
+        /// <returns>hash result</returns>
         public byte[] Hash(byte[] msg)
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// signature
+        /// </summary>
+        /// <param name="digest">soure data</param>
+        /// <returns>signature result</returns>
         public byte[] Sign(byte[] digest)
         {
             string curveName = "P-256";
@@ -29,6 +45,12 @@ namespace bsn_sdk_csharp.Ecdsa
             return sign;
         }
 
+        /// <summary>
+        /// verify data signature
+        /// </summary>
+        /// <param name="sign">signature data</param>
+        /// <param name="digest">source data</param>
+        /// <returns>verify result</returns>
         public bool Verify(byte[] sign, byte[] digest)
         {
             string curveName = "P-256";

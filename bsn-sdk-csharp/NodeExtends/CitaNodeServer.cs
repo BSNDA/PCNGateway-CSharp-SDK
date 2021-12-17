@@ -2,8 +2,6 @@
 using bsn_sdk_csharp.Models;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace bsn_sdk_csharp.NodeExtends
 {
@@ -288,7 +286,11 @@ namespace bsn_sdk_csharp.NodeExtends
             }
             return new Tuple<bool, string, CitaTransactionData>(false, "failed to get transactions", null);
         }
-
+        /// <summary>
+        /// transactions under Key-Trust Mode
+        /// </summary>
+        /// <param name="reqBody"></param>
+        /// <returns></returns>
         public Tuple<bool, string, CitaTransResBody> ReqChainCode(CitaTransReqDataBody reqBody)
         {
             try
@@ -327,7 +329,11 @@ namespace bsn_sdk_csharp.NodeExtends
             }
             return new Tuple<bool, string, CitaTransResBody>(false, "The deal failed", null);
         }
-
+        /// <summary>
+        /// transaction processing under Key-Upload Mode
+        /// </summary>
+        /// <param name="reqBody"></param>
+        /// <returns></returns>
         public Tuple<bool, string, CitaTransResBody> SDKTrans(CitaTransReq reqBody)
         {
             try
@@ -379,7 +385,7 @@ namespace bsn_sdk_csharp.NodeExtends
         }
 
         /// <summary>
-        /// chaincode event registration
+        /// event registration
         /// </summary>
         /// <param name="reqBody"></param>
         /// <returns></returns>
@@ -420,7 +426,7 @@ namespace bsn_sdk_csharp.NodeExtends
         }
 
         /// <summary>
-        /// event chaincode query
+        /// event query
         /// </summary>
         /// <returns></returns>
         public Tuple<bool, string, CitaQueryEventResData> EventQuery()
@@ -459,7 +465,7 @@ namespace bsn_sdk_csharp.NodeExtends
         }
 
         /// <summary>
-        /// event chaincode logout
+        /// event logout
         /// </summary>
         /// <returns></returns>
         public Tuple<bool, string, NodeApiRes> EventRemove(CitaRemoveEventReqDataBody reqBody)

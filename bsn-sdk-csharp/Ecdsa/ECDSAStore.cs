@@ -60,6 +60,12 @@ namespace bsn_sdk_csharp.Ecdsa
             }
         }
 
+        /// <summary>
+        /// save public key
+        /// </summary>
+        /// <param name="publicKey">public key</param>
+        /// <param name="pkUrl">key file</param>
+        /// <returns></returns>
         public static bool SavePubKey(ECPublicKeyParameters publicKey, string pkUrl)
         {
             try

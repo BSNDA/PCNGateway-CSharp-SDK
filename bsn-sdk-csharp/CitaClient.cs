@@ -2,11 +2,7 @@
 using bsn_sdk_csharp.Models;
 using bsn_sdk_csharp.NodeExtends;
 using bsn_sdk_csharp.Trans;
-using Org.BouncyCastle.Math;
 using System;
-using System.Collections.Generic;
-
-using System.Text;
 
 namespace bsn_sdk_csharp
 {
@@ -33,7 +29,7 @@ namespace bsn_sdk_csharp
                 var res = new CitaNodeServer(config).GetBlockHeight();
                 if (res.Item1)
                 {
-                    var height = Convert.ToInt64(res.Item3.data);
+                    var height = Convert.ToInt64(res.Item3.Data);
                     return UInt64.Parse((height + limit).ToString());
                 }
                 else

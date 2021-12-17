@@ -26,7 +26,7 @@ namespace bsn_sdk_csharp.Trans
         public string EnrollmentCertificate { get; set; }
 
         /// <summary>
-        /// Private key under Public-Key-Upload Mode 
+        /// Private key under Public-Key-Upload Mode
         /// </summary>
         public string PrivateKey { get; set; }
 
@@ -42,7 +42,7 @@ namespace bsn_sdk_csharp.Trans
     }
 
     /// <summary>
-    /// user info under Public-Key-Upload Mode 
+    /// user info under Public-Key-Upload Mode
     /// </summary>
     public class User
     {
@@ -52,7 +52,7 @@ namespace bsn_sdk_csharp.Trans
         public string UserName { get; set; }
 
         /// <summary>
-        /// user cert under Public-Key-Upload Mode 
+        /// user cert under Public-Key-Upload Mode
         /// </summary>
         public string EnrollmentCertificate { get; set; }
 

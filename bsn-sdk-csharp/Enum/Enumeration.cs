@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 
 namespace bsn_sdk_csharp.Enum
 {
+    /// <summary>
+    /// enumeration base class
+    /// </summary>
     public class Enumeration : IComparable
     {
         private readonly int _value;

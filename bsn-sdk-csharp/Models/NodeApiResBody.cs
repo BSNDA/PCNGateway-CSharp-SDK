@@ -87,7 +87,7 @@ namespace bsn_sdk_csharp.Models
         public string mspId { get; set; }
 
         /// <summary>
-        /// Change the DApp channel from Fabric to channelId, fisco togroupId
+        /// change the DApp channel from Fabric to channelId, fisco togroupId
         /// </summary>
         public string channelId { get; set; }
 
@@ -98,7 +98,7 @@ namespace bsn_sdk_csharp.Models
     }
 
     /// <summary>
-    /// Return contents of User Registration
+    /// return contents of User Registration
     /// </summary>
     public class RegisterUserResBody
     {
@@ -114,7 +114,7 @@ namespace bsn_sdk_csharp.Models
     }
 
     /// <summary>
-    /// Return content of certificate registration
+    /// return content of certificate registration
     /// </summary>
     public class EnrollUserResBody
     {
@@ -217,7 +217,23 @@ namespace bsn_sdk_csharp.Models
         /// </summary>
         public long timeSpanNsec { get; set; }
     }
+    /// <summary>
+    /// get response body of transations
+    /// </summary>
+    public class GetTransDataResBody
+    {
+        /// <summary>
+        /// transations  Id
+        /// </summary>
+        public string txId { get; set; }
 
+        /// <summary>
+        /// transations data
+        /// </summary>
+        public string transData { get; set; }
+
+
+    }
     /// <summary>
     /// return contents to get the block information
     /// </summary>
@@ -253,7 +269,33 @@ namespace bsn_sdk_csharp.Models
         /// </summary>
         public List<TransactionData> transactions { get; set; }
     }
+    /// <summary>
+    /// return contents to get the block information
+    /// </summary>
+    public class GetBlockDataResBody
+    {
+        /// <summary>
+        /// block hash
+        /// </summary>
+        public string blockHash { get; set; }
 
+        /// <summary>
+        /// block number
+        /// </summary>
+        public long blockNumber { get; set; }
+
+        /// <summary>
+        /// Hash of last block
+        /// </summary>
+        public string preBlockHash { get; set; }
+
+        /// <summary>
+        /// block data
+        /// </summary>
+        public string blockData { get; set; }
+
+
+    }
     /// <summary>
     /// return content to get account information
     /// </summary>

@@ -17,7 +17,7 @@ namespace bsn_sdk_csharp.SM2
     public class SM2Utils
     {
         /// <summary>
-        /// 生成国密公私钥对
+        /// Generate SM public and private key pair
         /// </summary>
         public static AsymmetricCipherKeyPair GenerateKeyPair()
         {
@@ -28,30 +28,18 @@ namespace bsn_sdk_csharp.SM2
             return keyGenerator.GenerateKeyPair();
         }
 
-        public static void SaveKey(AsymmetricKeyParameter key, string url)
-        {
-            Org.BouncyCastle.Asn1.Pkcs.PrivateKeyInfo privateKeyInfo = Org.BouncyCastle.Pkcs.PrivateKeyInfoFactory.CreatePrivateKeyInfo(key);
-            Org.BouncyCastle.Utilities.IO.Pem.PemObject pemObj = new Org.BouncyCastle.Utilities.IO.Pem.PemObject("PRIVATE KEY", privateKeyInfo.ToAsn1Object().GetEncoded());
-            TextWriter textkey = new StringWriter();
-            PemWriter pemkey = new PemWriter(textkey);
-            pemkey.WriteObject(pemObj);
-            pemkey.Writer.Flush();
-            string pri = textkey.ToString();
-            pemkey.WriteObject(key);
-            pemkey.Writer.Flush();
-            byte[] priInfoByte = System.Text.Encoding.UTF8.GetBytes(textkey.ToString());
-            FileStream fs = new FileStream(url, FileMode.Create, FileAccess.Write);
-            fs.Write(priInfoByte, 0, priInfoByte.Length);
-            fs.Close();
-        }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="message"></param>
+        /// <returns></returns>
         public static byte[] SM3Hash(byte[] message)
         {
             return DigestUtilities.CalculateDigest("SM3", message);
         }
 
         /// <summary>
-        /// 加密
+        /// Encryption
         /// </summary>
         /// <param name="publicKey"></param>
         /// <param name="data"></param>
@@ -89,7 +77,7 @@ namespace bsn_sdk_csharp.SM2
         }
 
         /// <summary>
-        /// 解密
+        /// Decrypt
         /// </summary>
         /// <param name="privateKey"></param>
         /// <param name="encryptedData"></param>
@@ -125,10 +113,10 @@ namespace bsn_sdk_csharp.SM2
         }
 
         /// <summary>
-        ///  使用私钥进行签名
+        ///  Sign with private key
         /// </summary>
-        /// <param name="macdata">签名原串</param>
-        /// <param name="privateKey">私钥</param>
+        /// <param name="macdata">String to be signed</param>
+        /// <param name="privateKey">Private key</param>
         /// <returns></returns>
         public static byte[] Sign(byte[] macdata, AsymmetricKeyParameter privateKey, out BigInteger R, out BigInteger S)
         {
@@ -157,10 +145,10 @@ namespace bsn_sdk_csharp.SM2
         }
 
         /// <summary>
-        ///  使用私钥进行签名
+        ///  Sign with private key
         /// </summary>
-        /// <param name="macdata">签名原串</param>
-        /// <param name="privateKey">私钥</param>
+        /// <param name="macdata">String to be signed</param>
+        /// <param name="privateKey">Private key</param>
         /// <returns></returns>
         public static byte[] Sign(byte[] macdata, AsymmetricKeyParameter privateKey)
         {
@@ -188,12 +176,12 @@ namespace bsn_sdk_csharp.SM2
         }
 
         /// <summary>
-        /// 使用公钥对待验签数据进行验签
+        /// Use the public key to verify the data to be verified
         /// </summary>
-        /// <param name="data">参与验签字符</param>
-        /// <param name="signature">要验签的签名串</param>
-        /// <param name="pkInfo">公钥信息</param>
-        /// <returns>返回验签结果</returns>
+        /// <param name="data">Verification character</param>
+        /// <param name="signature">Signature string to be verified</param>
+        /// <param name="pkInfo">Public key</param>
+        /// <returns></returns>
         public static bool VerifyData(byte[] data, byte[] signature, AsymmetricKeyParameter pkInfo)
         {
             Org.BouncyCastle.Crypto.Signers.SM2Signer signer = new Org.BouncyCastle.Crypto.Signers.SM2Signer();

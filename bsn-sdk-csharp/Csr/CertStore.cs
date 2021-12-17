@@ -3,7 +3,7 @@
 namespace bsn_sdk_csharp.Csr
 {
     /// <summary>
-    /// save cert 
+    /// save cert
     /// </summary>
     public class CertStore
     {

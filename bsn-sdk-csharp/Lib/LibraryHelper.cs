@@ -8,6 +8,11 @@ namespace bsn_sdk_csharp.Common
 {
     public class LibraryHelper
     {
+        /// <summary>
+        /// convert byte to BigInteger
+        /// </summary>
+        /// <param name="v"></param>
+        /// <returns></returns>
         public static BigInteger ToBigInteger(byte[] v)
         {
             byte[] r = new byte[v.Length + 1];
@@ -15,6 +20,11 @@ namespace bsn_sdk_csharp.Common
             return new BigInteger(r);
         }
 
+        /// <summary>
+        /// convert BigInteger to byte
+        /// </summary>
+        /// <param name="bi"></param>
+        /// <returns></returns>
         public static byte[] FromBigInteger(BigInteger bi)
         {
             byte[] array = bi.ToByteArray();
@@ -27,7 +37,12 @@ namespace bsn_sdk_csharp.Common
             return array;
         }
 
-        public static ECPrivateKeyParameters loadprikey(string privateKey)
+        /// <summary>
+        /// load private key
+        /// </summary>
+        /// <param name="privateKey">private key or private key file path</param>
+        /// <returns>private key</returns>
+        public static ECPrivateKeyParameters LoadPrikey(string privateKey)
         {
             string prik;
             if (!privateKey.Contains("PRIVATE KEY"))
@@ -45,7 +60,12 @@ namespace bsn_sdk_csharp.Common
             return sm2PrivateKey;
         }
 
-        public static ECPublicKeyParameters loadpubkey(string pkInfo)
+        /// <summary>
+        /// load public key
+        /// </summary>
+        /// <param name="pkInfo">public key or public key file path</param>
+        /// <returns>public key</returns>
+        public static ECPublicKeyParameters LoadPubkey(string pkInfo)
         {
             string pub;
             if (!pkInfo.Contains("CERTIFICATE") && !pkInfo.Contains("PUBLIC KEY"))
@@ -91,11 +111,9 @@ namespace bsn_sdk_csharp.Common
             FileStream fileStream = new FileStream(path, FileMode.Open);
             using (StreamReader reader = new StreamReader(fileStream))
             {
-
                 content = reader.ReadToEnd();
             }
             return content;
-
         }
     }
 }

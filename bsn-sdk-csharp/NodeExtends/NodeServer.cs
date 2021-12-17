@@ -48,9 +48,18 @@ namespace bsn_sdk_csharp.NodeExtends
         private static string GetTransUrl = "/api/fabric/v1/node/getTransaction";
 
         /// <summary>
+        /// get transaction data URL
+        /// </summary>
+        private static string GetTransDataUrl = "/api/fabric/v1/node/getTransdata";
+
+        /// <summary>
         /// get blockinfo URL
         /// </summary>
         private static string GetBlockUrl = "/api/fabric/v1/node/getBlockInfo";
+        /// <summary>
+        /// get blockinfo URL
+        /// </summary>
+        private static string GetBlockDataUrl = "/api/fabric/v1/node/getBlockData";
 
         /// <summary>
         /// get ledgerinfo URL
@@ -249,6 +258,57 @@ namespace bsn_sdk_csharp.NodeExtends
             }
             return new Tuple<bool, string, GetTransResBody>(false, "failed to get transactions", null);
         }
+        /// <summary>
+        /// get transaction data
+        /// </summary>
+        /// <param name="config"></param>
+        /// <param name="reqBody"></param>
+        /// <returns></returns>
+        public Tuple<bool, string, GetTransDataResBody> GetTransactionData(GetTransReqBody reqBody)
+        {
+            try
+            {
+                NodeApiReqBody<GetTransReqBody> req = new NodeApiReqBody<GetTransReqBody>()
+                {
+                    body = new GetTransReqBody()
+                    {
+                        txId = reqBody.txId
+                    },
+                    header = new ReqHeader()
+                    {
+                        appCode = config.appInfo.AppCode,
+                        userCode = config.userCode
+                    }
+                };
+                //assemble the string to sign
+                var data = ReqMacExtends.GetTransactionReqMac(req);
+                //sign the data
+                req.mac = sign.Sign(data);
+
+                var res = SendHelper.SendPost<NodeApiResBody<GetTransDataResBody>>(config.reqUrl + GetTransDataUrl, JsonConvert.SerializeObject(req), config.httpsCert);
+                if (res != null)
+                {
+                    //check the status codes in turn
+                    if (res.header.code != 0) return new Tuple<bool, string, GetTransDataResBody>(false, res.header.msg, null);
+                    //assemble the original string to sign
+                    var datares = ResMacExtends.GetTransactionDataResMac(res);
+                    //verify data
+                    if (sign.Verify(res.mac, datares))
+                    {
+                        return new Tuple<bool, string, GetTransDataResBody>(true, res.header.msg, res.body);
+                    }
+                    else
+                    {
+                        return new Tuple<bool, string, GetTransDataResBody>(false, "failed to sign", null);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return new Tuple<bool, string, GetTransDataResBody>(false, "failed to get transactions", null);
+        }
 
         /// <summary>
         /// get block info
@@ -303,6 +363,60 @@ namespace bsn_sdk_csharp.NodeExtends
                 throw ex;
             }
             return new Tuple<bool, string, GetBlockResBody>(false, "failed to get block info", null);
+        }
+        /// <summary>
+        /// get block data
+        /// </summary>
+        /// <param name="config"></param>
+        /// <param name="reqBody"></param>
+        /// <returns></returns>
+        public Tuple<bool, string, GetBlockDataResBody> GetBlockData(GetBlockReqBody reqBody)
+        {
+            try
+            {
+                NodeApiReqBody<GetBlockReqBody> req = new NodeApiReqBody<GetBlockReqBody>()
+                {
+                    body = new GetBlockReqBody()
+                    {
+                        txId = reqBody.txId,
+                        blockHash = reqBody.blockHash,
+                        blockNumber = reqBody.blockNumber
+                    },
+                    header = new ReqHeader()
+                    {
+                        appCode = config.appInfo.AppCode,
+                        userCode = config.userCode
+                    }
+                };
+                //assemble the string to sign
+                var data = ReqMacExtends.GetBlockInfoReqMac(req);
+                //sign the data
+                req.mac = sign.Sign(data);
+
+                var res = SendHelper.SendPost<NodeApiResBody<GetBlockDataResBody>>(config.reqUrl + GetBlockDataUrl, JsonConvert.SerializeObject(req), config.httpsCert);
+                if (res != null)
+                {
+                    //Check the status codes in turn
+                    if (res.header.code != 0) return new Tuple<bool, string, GetBlockDataResBody>(false, res.header.msg, null);
+                    //Assemble the original string to sign
+                    var datares = ResMacExtends.GetBlockDataResMac(res);
+
+                    //verify data
+                    if (sign.Verify(res.mac, datares))
+                    {
+                        return new Tuple<bool, string, GetBlockDataResBody>(true, res.header.msg, res.body);
+                    }
+                    else
+                    {
+                        return new Tuple<bool, string, GetBlockDataResBody>(false, "failed to verify the signature", null);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return new Tuple<bool, string, GetBlockDataResBody>(false, "failed to get block data", null);
         }
 
         /// <summary>
@@ -561,7 +675,7 @@ namespace bsn_sdk_csharp.NodeExtends
         }
 
         /// <summary>
-        /// transaction processing under Key-Trust Mode
+        /// transaction processing under Key-Upload Mode
         /// </summary>
         /// <param name="config"></param>
         /// <param name="reqBody"></param>

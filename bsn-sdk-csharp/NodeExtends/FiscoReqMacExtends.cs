@@ -1,12 +1,15 @@
 ﻿using bsn_sdk_csharp.Models;
-using System;
-using System.Collections.Generic;
 using System.Text;
 
 namespace bsn_sdk_csharp.NodeExtends
 {
     public class FiscoReqMacExtends
     {
+        /// <summary>
+        /// character string to sign to get the user registered
+        /// </summary>
+        /// <param name="req"></param>
+        /// <returns></returns>
         public static string GetRegisterUserReqMac(NodeApiReqBody<FiscoRegisterReqBody> req)
         {
             StringBuilder strBuilder = new StringBuilder();
@@ -14,7 +17,11 @@ namespace bsn_sdk_csharp.NodeExtends
                       .Append(req.body.UserId);
             return strBuilder.ToString();
         }
-
+        /// <summary>
+        /// character string to sign of transaction processing under key upload mode
+        /// </summary>
+        /// <param name="req"></param>
+        /// <returns></returns>
         public static string GetFiscoTransReqMac(NodeApiReqBody<FiscoTransReqBody> req)
         {
             StringBuilder strBuilder = new StringBuilder();
@@ -31,7 +38,11 @@ namespace bsn_sdk_csharp.NodeExtends
                       .Append(header.appCode);
             return strRes.ToString();
         }
-
+        /// <summary>
+        /// character string to sign of transaction processing under key trust mode
+        /// </summary>
+        /// <param name="req"></param>
+        /// <returns></returns>
         public static string GetFiscoTransReqMac(NodeApiReqBody<FiscoTransReqDataBody> req)
         {
             StringBuilder strBuilder = new StringBuilder();
@@ -42,7 +53,11 @@ namespace bsn_sdk_csharp.NodeExtends
                       .Append(req.body.FuncParam);
             return strBuilder.ToString();
         }
-
+        /// <summary>
+        /// character string to sign to get the transacion receipt 
+        /// </summary>
+        /// <param name="req"></param>
+        /// <returns></returns>
         public static string GetFiscoTxReceiptReqMac(NodeApiReqBody<FiscoTxReqDataBody> req)
         {
             StringBuilder strBuilder = new StringBuilder();
@@ -50,7 +65,11 @@ namespace bsn_sdk_csharp.NodeExtends
                       .Append(req.body.TxHash);
             return strBuilder.ToString();
         }
-
+        /// <summary>
+        /// character string to sign to get the block information
+        /// </summary>
+        /// <param name="req"></param>
+        /// <returns></returns>
         public static string GetFiscoBlockInfoReqMac(NodeApiReqBody<FiscoBlockReqDataBody> req)
         {
             StringBuilder strBuilder = new StringBuilder();
@@ -59,7 +78,11 @@ namespace bsn_sdk_csharp.NodeExtends
                       .Append(req.body.BlockHash);
             return strBuilder.ToString();
         }
-
+        /// <summary>
+        /// character string to sign to register event 
+        /// </summary>
+        /// <param name="req"></param>
+        /// <returns></returns>
         public static string GetFiscoEventRegisterReqMac(NodeApiReqBody<FiscoRegisterReqDataBody> req)
         {
             StringBuilder strBuilder = new StringBuilder();
@@ -71,7 +94,11 @@ namespace bsn_sdk_csharp.NodeExtends
                       .Append(req.body.AttachArgs);
             return strBuilder.ToString();
         }
-
+        /// <summary>
+        /// character string to sign to logout event 
+        /// </summary>
+        /// <param name="req"></param>
+        /// <returns></returns>
         public static string GetFiscoEventRemoveReqMac(NodeApiReqBody<RemoveReqDataBody> req)
         {
             StringBuilder strBuilder = new StringBuilder();

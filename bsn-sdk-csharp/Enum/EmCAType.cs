@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace bsn_sdk_csharp.Enum
 {
+    /// <summary>
+    /// ca type enumeration
+    /// </summary>
     public class EmCAType : Enumeration
     {
         private EmCAType()

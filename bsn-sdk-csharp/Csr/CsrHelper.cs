@@ -18,6 +18,11 @@ namespace bsn_sdk_csharp.Csr
 {
     public class CsrHelper
     {
+        /// <summary>
+        /// get csr
+        /// </summary>
+        /// <param name="issuerName"></param>
+        /// <returns></returns>
         public static Tuple<string, AsymmetricKeyParameter> GetCsr(string issuerName)
         {
             //generate KeyPair
@@ -50,6 +55,11 @@ namespace bsn_sdk_csharp.Csr
             return new Tuple<string, AsymmetricKeyParameter>(str.ToString(), keypair.Private);
         }
 
+        /// <summary>
+        ///  get sm2 csr
+        /// </summary>
+        /// <param name="issuerName"></param>
+        /// <returns></returns>
         public static Tuple<string, AsymmetricKeyParameter> GetSMCsr(string issuerName)
         {
             //generate KeyPair

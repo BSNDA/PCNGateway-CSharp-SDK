@@ -177,7 +177,7 @@ namespace bsn_sdk_csharp.Models
         public string notifyUrl { get; set; }
 
         /// <summary>
-        /// Additional parameters
+        /// additional parameters
         /// </summary>
         public string attachArgs { get; set; }
     }

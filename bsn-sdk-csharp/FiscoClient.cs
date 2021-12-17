@@ -3,7 +3,6 @@ using bsn_sdk_csharp.Models;
 using bsn_sdk_csharp.NodeExtends;
 using bsn_sdk_csharp.Trans;
 using Org.BouncyCastle.Math;
-using Org.BouncyCastle.Utilities.Encoders;
 using System;
 
 namespace bsn_sdk_csharp
@@ -30,7 +29,7 @@ namespace bsn_sdk_csharp
                 var res = new FiscoNodeServer(config).GetBlockHeight();
                 if (res.Item1)
                 {
-                    var height = Convert.ToInt64(res.Item3.data);
+                    var height = Convert.ToInt64(res.Item3.Data);
                     return new BigInteger((height + limit).ToString());
                 }
                 else

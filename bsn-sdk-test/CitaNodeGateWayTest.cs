@@ -1,7 +1,6 @@
 ﻿using bsn_sdk_csharp;
 using bsn_sdk_csharp.Enum;
 using bsn_sdk_csharp.NodeExtends;
-using bsn_sdk_csharp.Trans;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
 using Org.BouncyCastle.Utilities.Encoders;
@@ -41,7 +40,7 @@ namespace bsn_sdk_test
             var config = CitaConfig.NewMockConfig();
             var res = new CitaNodeServer(config).GetBlockInfo(new bsn_sdk_csharp.Models.CitaBlockReqDataBody()
             {
-                //BlockNumber = "5"
+                //blockNumber = "5"
                 BlockHash = "0xdcd3c2ee803f43497210cb91e5b3b16f9ebf65f3ef42e9bc43d3a94bc98373ca"
             });
 
@@ -195,7 +194,7 @@ namespace bsn_sdk_test
             {
                 AttachArgs = "abc=123",
                 EventType = 2,
-                //ContractAddress = "0x866aefc204b8f8fdc3e45b908fd43d76667d7f76",
+                //contractAddress = "0x866aefc204b8f8fdc3e45b908fd43d76667d7f76",
                 ContractName = "GetTopic",
                 NotifyUrl = "http://192.168.6.78:1808/api/cita/test"
             });

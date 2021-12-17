@@ -106,6 +106,6 @@ namespace bsn_sdk_csharp.Lib
             }
         }
 
-        #endregion AES symmetric encryption and decryption
+        #endregion AES Symmetric encryption and decryption
     }
 }
