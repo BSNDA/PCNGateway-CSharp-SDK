@@ -89,7 +89,7 @@ namespace bsn_sdk_csharp
         {
             var config = new AppSetting()
             {
-                reqUrl = "http://192.168.1.43:17502",
+                reqUrl = "https://fuzhounode.bsngate.com:17602",
                 appCert = new AppCert()
                 {
                     AppPublicCert = @"-----BEGIN PUBLIC KEY-----
@@ -97,20 +97,20 @@ MFkwEwYHKoZIzj0CAQYIKoEcz1UBgi0DQgAECwJ5ftuqndO9H3ks1hD8cB6IA9lx
 /b0Z2hnFZ77rgRm9Q4lY1aqIhkM63Lh6X7uwPsoRC1xkS0PMp5x/jnRWcw==
 -----END PUBLIC KEY-----",
                     UserAppPrivate = @"-----BEGIN PRIVATE KEY-----
-MIGTAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBHkwdwIBAQQgboz7K3ByOve5tJvp
-s9bWjc03HSSSA02W3IokxSwyzrSgCgYIKoZIzj0DAQehRANCAAT7Mv6TvMcmNQkp
-ZFN3Fb5BcQoIasr8YsYdrjBWcna34t0uc/ddSKfjLzCGQL3T0Nw3DsG2o2jriI2L
-qOohgsN6
+MIGTAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBHkwdwIBAQQgvIO1feuOt1eYnKei
+fXaZwJE03R3YhVUDsilniBdPfoWgCgYIKoZIzj0DAQehRANCAAR4mk3I6uTLL4Ac
+dbqB73MRtiMGsUIinJ96qLsfGIiG1LCIUBq2FwawCIOPTqbNqMzHlu3uC6/7QAjD
+YyYNaIkz
 -----END PRIVATE KEY-----
 "
                 },
                 appInfo = new AppInfo()
                 {
-                    AppCode = "app0001202007301714165892185",
+                    AppCode = "app0001202008181046408059749",
                 },
-                userCode = "USER0001202007221349011109723",
-                mspDir = "D:/csharp/bsn-sdk-csharp/Certs",
-                httpsCert = "D:/csharp/bsn-sdk-csharp/Certs/bsn_gateway_https.crt"
+                userCode = "gaowanqiu",
+                mspDir = "E:/bsn-sdk-csharp/Certs",
+                httpsCert = ""
             };
 
             if (!Directory.Exists(config.mspDir))
@@ -209,8 +209,8 @@ PIXILYkE
         /// <returns></returns>
         public static AppSetting GetAppSettingFromFile(string path)
         {
-
-            if (string.IsNullOrEmpty(path)) {
+            if (string.IsNullOrEmpty(path))
+            {
                 path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "config.json");
             }
 
@@ -248,13 +248,12 @@ PIXILYkE
         }
 
         /// <summary>
-        /// Get default configuration from the config.json in the root directory 
+        /// Get default configuration from the config.json in the root directory
         /// </summary>
         /// <returns></returns>
         public static AppSetting GetDefaultConfig()
         {
             return GetAppSettingFromFile(string.Empty);
-
         }
     }
 }
