@@ -1,4 +1,4 @@
-﻿using bsn_sdk_csharp.Common;
+﻿using bsn_sdk_csharp.Lib;
 using bsn_sdk_csharp.Enum;
 using bsn_sdk_csharp.Models;
 using bsn_sdk_csharp.NodeExtends;
@@ -89,12 +89,12 @@ namespace bsn_sdk_csharp
         {
             var config = new AppSetting()
             {
-                reqUrl = "http://192.168.1.1:17602",
+                reqUrl = "http://192.168.1.60:17502",
                 appCert = new AppCert()
                 {
                     AppPublicCert = @"-----BEGIN PUBLIC KEY-----
-MFkwEwYHKoZIzj0CAQYIKoEcz1UBgi0DQgAECwJ5ftuqndO9H3ks1hD8cB6IA9lx
-/b0Z2hnFZ77rgRm9Q4lY1aqIhkM63Lh6X7uwPsoRC1xkS0PMp5x/jnRWcw==
+MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEP19sOfqSaGVzQjvNU+MTEfk8ZhaG
+JOnhtZGDC/BwT61E+kH5cbQ12LBPYUs1QKL6uQx8MN7w/F37f5scLAF8rg==
 -----END PUBLIC KEY-----",
                     UserAppPrivate = @"-----BEGIN PRIVATE KEY-----
 MIGTAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBHkwdwIBAQQg9ZNsVRzwoLPfuQw2
@@ -106,9 +106,9 @@ Mn0/OHhR
                 },
                 appInfo = new AppInfo()
                 {
-                    AppCode = "app0001202008181046408059749",
+                    AppCode = "app0001202111301351130246310",
                 },
-                userCode = "gaowanqiu",
+                userCode = "USER0001202107291458197619658",
                 mspDir = "E:/bsn-sdk-csharp/Certs",
                 httpsCert = ""
             };

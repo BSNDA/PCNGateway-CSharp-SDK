@@ -64,11 +64,13 @@ namespace bsn_sdk_test
             var config = Config.NewMockConfig();
             var res = new NodeServer(config).GetTransaction(new bsn_sdk_csharp.Models.GetTransReqBody()
             {
+                
                 txId = "44876939fbea8adae1fe52901da410a0e957c0905450446ac17da242f591edab"
             });
             Console.WriteLine(JsonConvert.SerializeObject(res));
             Assert.IsNotNull(res);
         }
+
         /// <summary>
         /// get the data of transaction
         /// </summary>
@@ -78,11 +80,18 @@ namespace bsn_sdk_test
             var config = Config.NewMockConfig();
             var res = new NodeServer(config).GetTransactionData(new bsn_sdk_csharp.Models.GetTransReqBody()
             {
-                txId = "44876939fbea8adae1fe52901da410a0e957c0905450446ac17da242f591edab"
+                txId = "3b231f16376bc0ebcdd0dc82e8728746174f393f80ad108b6128f1ad1ccaebd5"
             });
+            if (res.Item3 != null)
+            {
+                var trans = Util.ProcessedTransactionConvert(res.Item3.transData);
+                Console.WriteLine(JsonConvert.SerializeObject(trans));
+            }
+
             Console.WriteLine(JsonConvert.SerializeObject(res));
             Assert.IsNotNull(res);
         }
+
         /// <summary>
         /// get the information of block
         /// </summary>
@@ -92,11 +101,12 @@ namespace bsn_sdk_test
             var config = Config.NewMockConfig();
             var res = new NodeServer(config).GetBlockInfo(new bsn_sdk_csharp.Models.GetBlockReqBody()
             {
-                blockHash = "6081e24a259bed755747f35a7eb7df77247b1cba5c29a75d8857e90acdc78713"
+                blockHash = "1e7f2e4ec080890cae703694312b954a160f5955c2f0f7b09569ffbb9630b9e8"
             });
             Console.WriteLine(JsonConvert.SerializeObject(res));
             Assert.IsNotNull(res);
         }
+
         /// <summary>
         /// get the data of block
         /// </summary>
@@ -106,11 +116,18 @@ namespace bsn_sdk_test
             var config = Config.NewMockConfig();
             var res = new NodeServer(config).GetBlockData(new bsn_sdk_csharp.Models.GetBlockReqBody()
             {
-                blockHash = "6081e24a259bed755747f35a7eb7df77247b1cba5c29a75d8857e90acdc78713"
+                blockNumber = 3
+                //blockHash = "6081e24a259bed755747f35a7eb7df77247b1cba5c29a75d8857e90acdc78713"
             });
+            if (res.Item3 != null)
+            {
+                var b = Util.BlockConvert(res.Item3.blockData);
+                Console.WriteLine(JsonConvert.SerializeObject(b));
+            }
             Console.WriteLine(JsonConvert.SerializeObject(res));
             Assert.IsNotNull(res);
         }
+
         /// <summary>
         /// get ledger information
         /// </summary>

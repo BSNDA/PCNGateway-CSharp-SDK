@@ -1,5 +1,6 @@
 ﻿using Google.Protobuf;
 using Google.Protobuf.Collections;
+using Protos;
 using System;
 using System.Collections.Generic;
 using System.Security.Cryptography;
@@ -25,7 +26,44 @@ namespace bsn_sdk_csharp.Trans
                 return str;
             }
         }
+        /// <summary>
+        ///  convert CharacterString to Block
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
+        public static Common.Block BlockConvert(string str)
+        {
+            Common.Block msg = new Common.Block();
 
+            using (System.IO.MemoryStream ms = new System.IO.MemoryStream())
+            {
+                var b = Convert.FromBase64String(str);
+                ms.Write(b, 0, b.Length);
+                ms.Position = 0;
+                msg = Common.Block.Parser.ParseFrom(b,0,b.Length);
+                    
+            }
+            return msg;
+        }
+        /// <summary>
+        ///  convert CharacterString to ProcessedTransaction
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
+        public static ProcessedTransaction ProcessedTransactionConvert(string str)
+        {
+            ProcessedTransaction msg = new ProcessedTransaction();
+
+            using (System.IO.MemoryStream ms = new System.IO.MemoryStream())
+            {
+                var b = Convert.FromBase64String(str);
+                ms.Write(b, 0, b.Length);
+                ms.Position = 0;
+                msg = ProcessedTransaction.Parser.ParseFrom(b, 0, b.Length);
+
+            }
+            return msg;
+        }
         /// <summary>
         /// Convert class ByteString
         /// </summary>

@@ -80,6 +80,11 @@ namespace bsn_sdk_test
             {
                 txId = "44876939fbea8adae1fe52901da410a0e957c0905450446ac17da242f591edab"
             });
+            if (res.Item3 != null)
+            {
+                var trans = Util.ProcessedTransactionConvert(res.Item3.transData);
+                Console.WriteLine(JsonConvert.SerializeObject(trans));
+            }
             Console.WriteLine(JsonConvert.SerializeObject(res));
             Assert.IsNotNull(res);
         }
@@ -108,6 +113,11 @@ namespace bsn_sdk_test
             {
                 blockHash = "6081e24a259bed755747f35a7eb7df77247b1cba5c29a75d8857e90acdc78713"
             });
+            if (res.Item3 != null)
+            {
+                var b = Util.BlockConvert(res.Item3.blockData);
+                Console.WriteLine(JsonConvert.SerializeObject(b));
+            }
             Console.WriteLine(JsonConvert.SerializeObject(res));
             Assert.IsNotNull(res);
         }

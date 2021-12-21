@@ -4,7 +4,7 @@ using System;
 using System.IO;
 using System.Linq;
 
-namespace bsn_sdk_csharp.Common
+namespace bsn_sdk_csharp.Lib
 {
     public class LibraryHelper
     {
