@@ -14,7 +14,7 @@ namespace bsn_sdk_csharp
         public Client(AppSetting _config)
         {
             config = _config;
-            sign = SetAlgorithm(config.appInfo.AlgorithmType, config.appCert.AppPublicCert, config.appCert.UserAppPrivate);
+            sign = Lib.LibraryHelper.SetAlgorithm(config.appInfo.AlgorithmType, config.appCert.AppPublicCert, config.appCert.UserAppPrivate);
         }
 
         public Client()
@@ -24,25 +24,9 @@ namespace bsn_sdk_csharp
         public void SetConfig(AppSetting _config)
         {
             config = _config;
-            sign = SetAlgorithm(config.appInfo.AlgorithmType, config.appCert.AppPublicCert, config.appCert.UserAppPrivate);
+            sign =Lib.LibraryHelper.SetAlgorithm(config.appInfo.AlgorithmType, config.appCert.AppPublicCert, config.appCert.UserAppPrivate);
         }
 
-        public Crypto SetAlgorithm(EmAlgorithmType algorithmType, string puk, string pri)
-        {
-            switch (algorithmType.Value)
-            {
-                case 1:
-                    var handle = new SM2Handle(pri, puk);
-                    return new BsnCrypto(handle);
-
-                case 2:
-                case 3:
-                    var handleEcdsa = new ECDSAHandle(pri, puk);
-                    return new BsnCrypto(handleEcdsa);
-
-                default:
-                    return null;
-            }
-        }
+        
     }
 }

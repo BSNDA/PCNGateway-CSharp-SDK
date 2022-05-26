@@ -107,7 +107,8 @@ namespace bsn_sdk_csharp.NodeExtends
                     body = new RegisterUserReqBody()
                     {
                         name = reqBody.name,//one user can only be registered once, the second call returns a failed registration
-                        secret = reqBody.secret//If the password is empty, a random password will be returned. Users under Key Mode needs to store the returned random password and pass it in when registering the certificate
+                        secret = reqBody.secret,//If the password is empty, a random password will be returned. Users under Key Mode needs to store the returned random password and pass it in when registering the certificate
+                        extendProperties=reqBody.extendProperties
                     },
                     header = new ReqHeader()
                     {
@@ -173,6 +174,7 @@ namespace bsn_sdk_csharp.NodeExtends
                 var resCsr = config.appInfo.AlgorithmType == EmAlgorithmType.SM2 ?
                   CsrHelper.GetSMCsr(string.Format("{0}@{1}", reqBody.name, config.appInfo.AppCode))
                   : CsrHelper.GetCsr(string.Format("{0}@{1}", reqBody.name, config.appInfo.AppCode));
+                req.body.csrPem = resCsr.Item1.Replace("\r","");
                 // assemble the original string to sign
                 var data = ReqMacExtends.GetEnrollUserReqMac(req);
                 req.mac = sign.Sign(data);
@@ -380,7 +382,8 @@ namespace bsn_sdk_csharp.NodeExtends
                     {
                         txId = reqBody.txId,
                         blockHash = reqBody.blockHash,
-                        blockNumber = reqBody.blockNumber
+                        blockNumber = reqBody.blockNumber,
+                        dataType=reqBody.dataType
                     },
                     header = new ReqHeader()
                     {

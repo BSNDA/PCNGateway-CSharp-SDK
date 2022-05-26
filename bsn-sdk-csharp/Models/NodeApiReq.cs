@@ -65,6 +65,10 @@ namespace bsn_sdk_csharp.Models
         ///if the user password is empty, a random password will be generated.
         /// </summary>
         public string secret { get; set; }
+        /// <summary>
+        /// extended properties
+        /// </summary>
+        public string extendProperties { get; set; }
     }
 
     /// <summary>
@@ -154,6 +158,11 @@ namespace bsn_sdk_csharp.Models
         /// transaction Id cannot be empty at the same time
         /// </summary>
         public string txId { get; set; }
+        /// <summary>
+        /// data type 
+        /// Optional is' JSON '. If it is JSON, the formatted data will be returned; otherwise, it is Base64 string
+        /// </summary>
+        public string dataType { get; set; }
     }
 
     /// <summary>

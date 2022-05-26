@@ -19,7 +19,8 @@ namespace bsn_sdk_csharp.NodeExtends
             StringBuilder strBuilder = new StringBuilder();
             strBuilder.Append(GetReqHeaderMac(req.header))
                       .Append(req.body.name)
-                      .Append(req.body.secret);
+                      .Append(req.body.secret)
+                      .Append(req.body.extendProperties);
             return strBuilder.ToString();
         }
 
@@ -65,7 +66,8 @@ namespace bsn_sdk_csharp.NodeExtends
             strBuilder.Append(GetReqHeaderMac(req.header))
                       .Append(req.body.blockNumber)
                           .Append(req.body.blockHash)
-                          .Append(req.body.txId);
+                          .Append(req.body.txId)
+                          .Append(req.body.dataType);
             return strBuilder.ToString();
         }
 

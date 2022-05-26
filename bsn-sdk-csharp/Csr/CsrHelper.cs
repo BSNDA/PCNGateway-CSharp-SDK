@@ -7,6 +7,7 @@ using Org.BouncyCastle.Asn1.X509;
 using Org.BouncyCastle.Asn1.X9;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Crypto.Generators;
+using Org.BouncyCastle.Crypto.Operators;
 using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Pkcs;
 using Org.BouncyCastle.Security;
@@ -32,7 +33,7 @@ namespace bsn_sdk_csharp.Csr
             var keypair = keyGenerator.GenerateKeyPair();
 
             //domain name of CSR file
-            X509Name principal = new X509Name(string.Format("CN={0}", string.IsNullOrEmpty(issuerName) ? "test02@app0001202004161020152918451" : issuerName));
+            X509Name principal = new X509Name(string.Format("CN={0},OU=client,O=BSN", string.IsNullOrEmpty(issuerName) ? "test02@app0001202004161020152918451" : issuerName));
 
             //load public key
             SubjectPublicKeyInfo subjectPublicKeyInfo = SubjectPublicKeyInfoFactory.CreateSubjectPublicKeyInfo(keypair.Public);
@@ -76,7 +77,8 @@ namespace bsn_sdk_csharp.Csr
 
             CertificationRequestInfo info = new CertificationRequestInfo(principal, subjectPublicKeyInfo, new DerSet());
             //signature
-            byte[] bs = ECDSAHelper.CsrSignData(info.GetEncoded(Asn1Encodable.Der), keypair.Private, pa.DomainParameters.N);
+            byte[] bs = SM2.SM2Utils.Sign(info.GetEncoded(Asn1Encodable.Der),keypair.Private); 
+                //ECDSAHelper.CsrSignData(info.GetEncoded(Asn1Encodable.Der), keypair.Private, pa.DomainParameters.N);
             //generate csr object
             Pkcs10CertificationRequest p10 = new Pkcs10CertificationRequest(new CertificationRequest
                 (info, new AlgorithmIdentifier(GMObjectIdentifiers.sm2sign_with_sm3),

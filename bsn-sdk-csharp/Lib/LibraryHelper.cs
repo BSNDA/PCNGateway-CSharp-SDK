@@ -1,8 +1,13 @@
-﻿using Org.BouncyCastle.Crypto.Parameters;
+﻿using bsn_sdk_csharp.Ecdsa;
+using bsn_sdk_csharp.Enum;
+using bsn_sdk_csharp.Sign;
+using bsn_sdk_csharp.SM2;
+using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Math;
 using System;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 
 namespace bsn_sdk_csharp.Lib
 {
@@ -76,7 +81,6 @@ namespace bsn_sdk_csharp.Lib
             {
                 pub = pkInfo;
             }
-
             TextReader ptr = new StringReader(pub);
             Org.BouncyCastle.OpenSsl.PemReader pem = new Org.BouncyCastle.OpenSsl.PemReader(ptr);
             ECPublicKeyParameters sm2PublicKey = (ECPublicKeyParameters)pem.ReadObject();
@@ -114,6 +118,31 @@ namespace bsn_sdk_csharp.Lib
                 content = reader.ReadToEnd();
             }
             return content;
+        }
+
+        /// <summary>
+        /// set sign handle
+        /// </summary>
+        /// <param name="algorithmType"></param>
+        /// <param name="puk"></param>
+        /// <param name="pri"></param>
+        /// <returns></returns>
+        public static Crypto SetAlgorithm(EmAlgorithmType algorithmType, string puk, string pri)
+        {
+            switch (algorithmType.Value)
+            {
+                case 1:
+                    var handle = new SM2Handle(pri, puk);
+                    return new BsnCrypto(handle);
+
+                case 2:
+                case 3:
+                    var handleEcdsa = new ECDSAHandle(pri, puk);
+                    return new BsnCrypto(handleEcdsa);
+
+                default:
+                    return null;
+            }
         }
     }
 }
