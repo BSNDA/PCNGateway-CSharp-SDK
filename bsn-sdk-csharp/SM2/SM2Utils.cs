@@ -1,6 +1,7 @@
 ﻿using Org.BouncyCastle.Asn1;
 using Org.BouncyCastle.Asn1.GM;
 using Org.BouncyCastle.Crypto;
+using Org.BouncyCastle.Crypto.Digests;
 using Org.BouncyCastle.Crypto.Generators;
 using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Math;
@@ -174,7 +175,15 @@ namespace bsn_sdk_csharp.SM2
             }
             return bs;
         }
-
+        /// <summary>
+        /// Hash the signed data
+        /// </summary>
+        /// <param name="macdata"></param>
+        /// <returns></returns>
+        public static byte[] Hash(byte[] macdata)
+        {
+            return DigestUtilities.CalculateDigest("SM3", macdata);
+        }
         /// <summary>
         /// Use the public key to verify the data to be verified
         /// </summary>
@@ -190,5 +199,13 @@ namespace bsn_sdk_csharp.SM2
             signer.BlockUpdate(data, 0, data.Length);
             return signer.VerifySignature(signature);
         }
+        public static byte[] SM3Digest(byte[] srcBytes)
+        {
+            SM3Digest sm3 = new SM3Digest();
+            sm3.BlockUpdate(srcBytes, 0, srcBytes.Length);
+            byte[] res = new byte[32];
+            sm3.DoFinal(res, 0);
+            return res;
+        }                                                                           
     }
 }

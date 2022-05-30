@@ -1,4 +1,7 @@
 ﻿using bsn_sdk_csharp.Ecdsa;
+using bsn_sdk_csharp.Enum;
+using bsn_sdk_csharp.Lib;
+using bsn_sdk_csharp.Sign;
 using Common;
 using Google.Protobuf;
 using Google.Protobuf.Collections;
@@ -12,9 +15,9 @@ namespace bsn_sdk_csharp.Trans
     {
         public static string CreateRequest(AppSetting config, TransRequest request)
         {
-            var header = new TransactionHeader(config.appInfo.MspId, request.EnrollmentCertificate, config.appInfo.ChannelId);
+            var header = new TransactionHeader(config.appInfo.MspId, request.EnrollmentCertificate, config.appInfo.ChannelId,request.IsSm3);
             var proposal = createInvokerProposal(request, header);
-            var pb_proposal = signProposal(proposal.Proposal, request.PrivateKey);
+            var pb_proposal = signProposal(proposal.Proposal, request.Sign);
             var res = Util.Marshal(pb_proposal).ToBase64();
             return res;
         }
@@ -95,11 +98,10 @@ namespace bsn_sdk_csharp.Trans
             return prop;
         }
 
-        private static SignedProposal signProposal(Proposal proposal, string prikey)
+        private static SignedProposal signProposal(Proposal proposal, Crypto userSign)
         {
             var proposalBytes = Util.Marshal(proposal);
-            var signature = Util.ConvertToByteString(ECDSAHelper.SignData(proposalBytes, prikey));
-
+            ByteString signature=Util.ConvertToByteString( userSign.Sign(proposalBytes.ToByteArray()));                          
             return new SignedProposal()
             {
                 ProposalBytes = proposalBytes,

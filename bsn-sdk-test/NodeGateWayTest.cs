@@ -1,4 +1,5 @@
 ﻿using bsn_sdk_csharp;
+using bsn_sdk_csharp.Enum;
 using bsn_sdk_csharp.Lib;
 using bsn_sdk_csharp.NodeExtends;
 using bsn_sdk_csharp.Trans;
@@ -32,8 +33,9 @@ namespace bsn_sdk_test
             var config = Config.NewMockConfig();
             var res = new NodeServer(config).RegisterUser(new bsn_sdk_csharp.Models.RegisterUserReqBody()
             {
-                name = "test",
-                secret = "123456"
+                name = "user20220526",
+                secret = "123456",
+                extendProperties=""
             });
             Console.WriteLine(JsonConvert.SerializeObject(res));
             Assert.IsNotNull(res);
@@ -48,7 +50,7 @@ namespace bsn_sdk_test
             var config = Config.NewMockConfig();
             var res = new NodeServer(config).EnrollUser(new bsn_sdk_csharp.Models.EnrollUserReqBody()
             {
-                name = "test",
+                name = "user20220526",
                 secret = "123456"
             });
             Console.WriteLine(JsonConvert.SerializeObject(res));
@@ -64,7 +66,6 @@ namespace bsn_sdk_test
             var config = Config.NewMockConfig();
             var res = new NodeServer(config).GetTransaction(new bsn_sdk_csharp.Models.GetTransReqBody()
             {
-                
                 txId = "44876939fbea8adae1fe52901da410a0e957c0905450446ac17da242f591edab"
             });
             Console.WriteLine(JsonConvert.SerializeObject(res));
@@ -114,15 +115,25 @@ namespace bsn_sdk_test
         public void GetBlockData()
         {
             var config = Config.NewMockConfig();
-            var res = new NodeServer(config).GetBlockData(new bsn_sdk_csharp.Models.GetBlockReqBody()
+            var req = new bsn_sdk_csharp.Models.GetBlockReqBody()
             {
-                blockNumber = 3
+                blockNumber = 3,
+                //dataType = "json"
                 //blockHash = "6081e24a259bed755747f35a7eb7df77247b1cba5c29a75d8857e90acdc78713"
-            });
+            };
+            var res = new NodeServer(config).GetBlockData(req);
             if (res.Item3 != null)
             {
-                var b = Util.BlockConvert(res.Item3.blockData);
-                Console.WriteLine(JsonConvert.SerializeObject(b));
+                if (req.dataType == "json")
+                {
+                    Console.WriteLine(res.Item3.blockData.Replace("\n", "").Replace(" ", "").Replace("\t", "").Replace("\r", ""));
+                }
+                else
+                {
+                    var b = Util.BlockConvert(res.Item3.blockData);
+                    Console.WriteLine(JsonConvert.SerializeObject(b));
+                }
+                
             }
             Console.WriteLine(JsonConvert.SerializeObject(res));
             Assert.IsNotNull(res);
@@ -214,19 +225,57 @@ namespace bsn_sdk_test
         public void SdkTran()
         {
             var config = Config.NewMockConfig();
+            if (config.appInfo.CAType!= EmCAType.Unmanaged)
+            {
+                Console.WriteLine("DApp in Key Trust mode cannot call this API");
+                return;
+            }
             List<string> args = new List<string>();
-            args.Add("{\"baseKey\":\"test202004212002\",\"baseValue\":\"this is string \"}");
-            var request = new TransRequest(config, "test")
+            args.Add("{\"baseKey\":\"test202205261633\",\"baseValue\":\"this is string \"}");
+            var request = new TransRequest(config, "user20220526")
             {
                 Args = args,
-                ChaincodeId = "cc_cl1851016378620200413194550_00",
+                ChaincodeId = "cc_app0001202205251431245994228_01",
                 ChannelId = config.appInfo.ChannelId,
                 Fcn = "set"
             };
+            if (string.IsNullOrEmpty(request.PrivateKey) || string.IsNullOrEmpty(request.EnrollmentCertificate))
+            {
+                Console.WriteLine("user info error");
+                return;
+            }
             var s = new NodeServer(config).Trans(request);
             Console.WriteLine(JsonConvert.SerializeObject(s));
         }
-
+        /// <summary>
+        ///invoke a transaction under public key uoload mode
+        /// </summary>
+        [TestMethod]
+        public void SdkTranQuery()
+        {
+            var config = Config.NewMockConfig();
+            if (config.appInfo.CAType != EmCAType.Unmanaged)
+            {
+                Console.WriteLine("DApp in Key Trust mode cannot call this API");
+                return;
+            }
+            List<string> args = new List<string>();
+            args.Add("test202205261506");
+            var request = new TransRequest(config, "user20220526")
+            {
+                Args = args,
+                ChaincodeId = "cc_app0001202205251431245994228_01",
+                ChannelId = config.appInfo.ChannelId,
+                Fcn = "get"
+            };
+            if (string.IsNullOrEmpty(request.PrivateKey) || string.IsNullOrEmpty(request.EnrollmentCertificate))
+            {
+                Console.WriteLine("user info error");
+                return;
+            }
+            var s = new NodeServer(config).Trans(request);
+            Console.WriteLine(JsonConvert.SerializeObject(s));
+        }
         /// <summary>
         /// data encrypt/dencrypt
         /// </summary>

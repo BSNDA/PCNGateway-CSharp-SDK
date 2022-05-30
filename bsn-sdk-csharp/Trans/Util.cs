@@ -118,7 +118,22 @@ namespace bsn_sdk_csharp.Trans
             temp.CopyTo(b);
             SHA256Managed Sha256 = new SHA256Managed();
             byte[] bytes = Sha256.ComputeHash(b);
-
+            return HashEncodeToString(bytes);
+        }
+        /// <summary>
+        ///byte to sm3 string
+        /// </summary>
+        /// <param name="nonce"></param>
+        /// <param name="creator"></param>
+        /// <returns></returns>
+        public static string ConvertSm3String(byte[] nonce, byte[] creator)
+        {
+            List<byte> temp = new List<byte>();
+            temp.AddRange(nonce);
+            temp.AddRange(creator);
+            var b = new byte[temp.Count];
+            temp.CopyTo(b);
+            byte[] bytes = SM2.SM2Utils.SM3Digest(b);
             return HashEncodeToString(bytes);
         }
 

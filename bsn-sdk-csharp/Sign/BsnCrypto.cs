@@ -9,6 +9,8 @@ namespace bsn_sdk_csharp.Sign
 
         public string Sign(string value);
 
+        public byte[] Sign(byte[] value);
+
         public bool Verify(string mac, string value);
     }
 
@@ -31,6 +33,11 @@ namespace bsn_sdk_csharp.Sign
             byte[] digest = Encoding.UTF8.GetBytes(value);
             var mac = sign.Sign(digest);
             return Convert.ToBase64String(mac);
+        }
+        public byte[] Sign(byte[] value)
+        {
+            var mac = sign.Sign(value);
+            return mac;
         }
 
         public bool Verify(string mac, string value)

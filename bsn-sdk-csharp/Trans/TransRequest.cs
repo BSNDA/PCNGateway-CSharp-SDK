@@ -1,4 +1,5 @@
 ﻿using bsn_sdk_csharp.Enum;
+using bsn_sdk_csharp.Sign;
 using System.Collections.Generic;
 
 namespace bsn_sdk_csharp.Trans
@@ -30,6 +31,14 @@ namespace bsn_sdk_csharp.Trans
         /// </summary>
         public string PrivateKey { get; set; }
 
+        /// <summary>
+        /// app AlgorithmType is it sm3
+        /// </summary>
+        public bool IsSm3 { get; set; }
+
+        ///
+        public  Crypto Sign { get; set; }
+
         public TransRequest(AppSetting config, string userName)
         {
             this.UserName = userName;
@@ -37,7 +46,9 @@ namespace bsn_sdk_csharp.Trans
             {
                 EnrollmentCertificate = string.Format("{0}/{1}@{2}_cert.pem", config.mspDir, userName, config.appInfo.AppCode);
                 PrivateKey = string.Format("{0}/{1}@{2}_sk.pem", config.mspDir, userName, config.appInfo.AppCode);
+                Sign = Lib.LibraryHelper.SetAlgorithm(config.appInfo.AlgorithmType,"",this.PrivateKey);
             }
+            this.IsSm3 = config.appInfo.AlgorithmType == EmAlgorithmType.SM2;
         }
     }
 
